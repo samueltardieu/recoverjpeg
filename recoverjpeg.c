@@ -3,11 +3,12 @@
 #define _FILE_OFFSET_BITS 64
 
 #include <sys/types.h>
-#include <sys/uio.h>
 #include <sys/mman.h>
+#include <sys/uio.h>
+#include <fcntl.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <fcntl.h>
 #include <unistd.h>
 
 static int verbose = 0;
@@ -37,11 +38,11 @@ display_progressbar (off_t offset, unsigned int n)
     to_display = (float) offset / (1024*1024*1024);
   }
 
-  if (n != old_n || (off_t) (to_display * 10.0) != old_to_display) {
+  if (n != old_n || (off_t) (to_display * 10) != old_to_display) {
     printf ("\rRecovered files: %4u        Analyzed: %4.1f %s  ",
 	    n, to_display, gib_mode ? "GiB" : "MiB");
     old_n = n;
-    old_to_display = (off_t) (to_display * 10.0);
+    old_to_display = (off_t) (to_display * 10);
   }
 }
 
@@ -127,6 +128,18 @@ jpeg_size (unsigned char *start)
   }
 }
 
+static void
+sigbus_handler ()
+{
+  if (verbose) {
+    fprintf (stderr, "SIGBUS received, recovery properly terminated\n");
+  }
+  if (progressbar ()) {
+    printf ("\r                                                     \r");
+  }
+  exit (0);
+}
+
 int
 main (int argc, char *argv[])
 {
@@ -137,6 +150,8 @@ main (int argc, char *argv[])
   char buffer[100];
   long page_size, mmap_size;
   off_t offset;
+
+  signal (SIGBUS, sigbus_handler);
 
   offset = 0;
   start = addr = NULL;
@@ -164,7 +179,7 @@ main (int argc, char *argv[])
     exit (1);
   }
 
-  /* Run forever, the program will end with an nmap error */
+  /* Run forever, the program will receive a SIGBUS */
   for (i = 0, offset = 0;;) {
 
     if (progressbar ()) {
