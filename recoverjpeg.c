@@ -93,7 +93,9 @@ jpeg_size (unsigned char *start)
     }
 
     if (size < 2 || size > MAX_SIZE) {
-      fprintf (stderr, "   Section size is out of bounds, aborting\n");
+      if (verbose) {
+	fprintf (stderr, "   Section size is out of bounds, aborting\n");
+      }
       return 0;
     }
 
