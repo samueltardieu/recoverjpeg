@@ -153,8 +153,6 @@ main (int argc, char *argv[])
 
   signal (SIGBUS, sigbus_handler);
 
-  offset = 0;
-  start = addr = NULL;
   page_size = sysconf (_SC_PAGESIZE);
   mmap_size = NPAGES * page_size;
 
@@ -180,7 +178,7 @@ main (int argc, char *argv[])
   }
 
   /* Run forever, the program will receive a SIGBUS */
-  for (i = 0, offset = 0;;) {
+  for (i = 0, offset = 0, start = NULL, addr = NULL;;) {
 
     if (progressbar ()) {
       display_progressbar (offset, i);
