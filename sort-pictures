@@ -14,6 +14,15 @@ destdir () {
  fi
 }
 
+dependencies () {
+ echo You need to install the identify and exif programs to use sort-pictures \
+   >&2
+ exit 1
+}
+
+identify > /dev/null 2>&1 || dependencies
+exif > /dev/null 2>&1 || dependencies
+
 for i in image?????.jpg; do
  d=`destdir $i`
  mkdir -p $d
