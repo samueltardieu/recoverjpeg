@@ -7,6 +7,7 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 static int verbose = 0;
@@ -19,13 +20,13 @@ usage (int clean_exit)
   fprintf (stderr, "Usage: recoverjpeg [options] file|device\n");
   fprintf (stderr, "Options:\n");
   fprintf (stderr, "   -b blocksize   Block size in bytes\n");
-  fprintf (stderr, "                    (default: 512 bytes)\n");
+  fprintf (stderr, "                    (default: 512)\n");
   fprintf (stderr, "   -h             This help message\n");
   fprintf (stderr, "   -m maxsize     Max jpeg file size in bytes\n");
-  fprintf (stderr, "                    (default: 6MB = 6291456 bytes)\n");
+  fprintf (stderr, "                    (default: 6m)\n");
   fprintf (stderr, "   -q             Be quiet\n");
   fprintf (stderr, "   -r readsize    Size of disk reads in bytes\n");
-  fprintf (stderr, "                    (default: 128MB = 134217728 bytes)\n");
+  fprintf (stderr, "                    (default: 128m)\n");
   fprintf (stderr, "   -v verbose     Replace progress bar by details\n");
   exit (clean_exit ? 0 : 1);
 }
@@ -148,6 +149,33 @@ jpeg_size (unsigned char *start)
   }
 }
 
+static unsigned int
+atoi_suffix (char *arg)
+{
+  int multiplier = 1;
+
+  switch (arg[strlen(arg)-1]) {
+  case 'g':
+  case 'G':
+    multiplier = 1024*1024*1024;
+    break;
+  case 'm':
+  case 'M':
+    multiplier = 1024*1024;
+    break;
+  case 'k':
+  case 'K':
+    multiplier = 1024;
+    break;
+  }
+
+  if (multiplier != 1) {
+    arg[strlen(arg)-1] = '\0';
+  }
+
+  return atoi (arg) * multiplier;
+}
+
 int
 main (int argc, char *argv[])
 {
@@ -167,16 +195,16 @@ main (int argc, char *argv[])
   while ((c = getopt (argc, argv, "b:hm:qr:v")) != -1) {
     switch (c) {
     case 'b':
-      block_size = atoi (optarg);
+      block_size = atoi_suffix (optarg);
       break;
     case 'm':
-      max_size = atoi (optarg);
+      max_size = atoi_suffix (optarg);
       break;
     case 'q':
       quiet = 1;
       break;
     case 'r':
-      read_size = atoi (optarg);
+      read_size = atoi_suffix (optarg);
       break;
     case 'v':
       verbose = 1;
@@ -206,8 +234,8 @@ main (int argc, char *argv[])
     }
     read_size = (read_size + page_size - 1) / page_size * page_size;
     if (!quiet) {
-      fprintf (stderr, "Adjusted read size to %u bytes (%u pages)\n",
-	       read_size, read_size / page_size);
+      fprintf (stderr, "Adjusted read size to %u bytes\n",
+	       read_size);
     }
   }
 

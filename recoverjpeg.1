@@ -26,13 +26,13 @@ for example) at the expense of a much longer running time.
 .TP
 .B \-m maxsize
 Maximum size of extract jpeg files. If a file would be larger than that,
-it is discarded. The default is 6291456 bytes (6MB).
+it is discarded. The default is 6 MiB.
 .TP
 .B \-q
 Be quiet and do not display anything.
 .TP
 .B \-r readsize
-Set the readsize in bytes. By default, this is 134217728 bytes (128MB).
+Set the readsize in bytes. By default, this is 128 MiB.
 Using a large readsize reduces the number of system calls but consumes
 more memory. The readsize will automatically be adjusted to be a multiple
 of the system page size. It \fBmust\fP be greater than the \fImaxsize\fP
@@ -44,6 +44,10 @@ this flag is not used,
 .B recoverjpeg
 will print a progress bar showing how
 much it has analyzed already and how many jpeg pictures have been recovered.
+
+All the sizes may be suffixed by a \fIk\fP, \fIm\fP or \fIg\fP letter
+to indicate KiB, MiB or GiB. For example, 6m correspond to 6 MiB
+(6291456 bytes).
 
 .SH AUTHOR
 .B Recoverjpeg
