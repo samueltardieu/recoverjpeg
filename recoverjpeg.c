@@ -12,7 +12,6 @@
 
 static int verbose = 0;
 static int quiet = 0;
-static char size_buffer[10];
 
 #define MAX_SIZE (6*1024*1024)
 #define NPAGES (32*1024)
@@ -23,23 +22,27 @@ progressbar ()
   return !(quiet || verbose);
 }
 
-static char *
-make_size (off_t offset)
-{
-  if (offset < 1024*1024*1024) {
-    snprintf (size_buffer, sizeof size_buffer,
-	      "%4.1f MiB", (float) offset / (1024 * 1024));
-  } else {
-    snprintf (size_buffer, sizeof size_buffer,
-	      "%4.1f GiB", (float) offset / (1024*1024*1024));
-  }
-  return size_buffer;
-}
-
 static void
 display_progressbar (off_t offset, unsigned int n)
 {
-  printf ("\rRecovered files: %4u        Analyzed: %s", n, make_size (offset));
+  static int gib_mode = 0;
+  static float old_to_display = 0.0;
+  static int old_n = -1;
+  float to_display;
+
+  if (offset < 1024*1024*1024) {
+    to_display = (float) offset / (1024*1024);
+  } else {
+    gib_mode = 1;
+    to_display = (float) offset / (1024*1024*1024);
+  }
+
+  if (n != old_n || to_display != old_to_display) {
+    printf ("\rRecovered files: %4u        Analyzed: %4.1f %s",
+	    n, to_display, gib_mode ? "GiB" : "MiB");
+    old_n = n;
+    old_to_display = to_display;
+  }
 }
 
 static size_t
