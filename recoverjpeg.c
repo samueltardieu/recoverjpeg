@@ -20,14 +20,14 @@ usage (int clean_exit)
 {
   fprintf (stderr, "Usage: recoverjpeg [options] file|device\n");
   fprintf (stderr, "Options:\n");
-  fprintf (stderr, "   -b blocksize   Block size in bytes\n");
-  fprintf (stderr, "                    (default: 512)\n");
+  fprintf (stderr, "   -b blocksize   Block size in bytes "
+	   "(default: 512)\n");
   fprintf (stderr, "   -h             This help message\n");
-  fprintf (stderr, "   -m maxsize     Max jpeg file size in bytes\n");
-  fprintf (stderr, "                    (default: 6m)\n");
+  fprintf (stderr, "   -m maxsize     Max jpeg file size in bytes "
+	   "(default: 6m)\n");
   fprintf (stderr, "   -q             Be quiet\n");
-  fprintf (stderr, "   -r readsize    Size of disk reads in bytes\n");
-  fprintf (stderr, "                    (default: 128m)\n");
+  fprintf (stderr, "   -r readsize    Size of disk reads in bytes "
+	   "(default: 128m)\n");
   fprintf (stderr, "   -v verbose     Replace progress bar by details\n");
   exit (clean_exit ? 0 : 1);
 }
