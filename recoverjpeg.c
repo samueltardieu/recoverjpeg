@@ -3,10 +3,8 @@
 #define _FILE_OFFSET_BITS 64
 
 #include <sys/types.h>
-#include <sys/mman.h>
 #include <sys/uio.h>
 #include <fcntl.h>
-#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -130,15 +128,12 @@ jpeg_size (unsigned char *start)
 }
 
 static void
-sigbus_handler ()
+cleanup_and_exit ()
 {
-  if (verbose) {
-    fprintf (stderr, "SIGBUS received, recovery properly terminated\n");
-  }
   if (progressbar ()) {
     printf ("\r                                                     \r");
   }
-  exit (0);
+  exit (0);  
 }
 
 int
@@ -146,16 +141,14 @@ main (int argc, char *argv[])
 {
   int fd, fdout;
   unsigned int i;
-  unsigned char *start, *addr;
+  unsigned char *start, *end, *addr;
   size_t size;
   char buffer[100];
-  long page_size, mmap_size;
+  long page_size, read_size;
   off_t offset;
 
-  signal (SIGBUS, sigbus_handler);
-
-  page_size = sysconf (_SC_PAGESIZE);
-  mmap_size = NPAGES * page_size;
+  page_size = getpagesize ();
+  read_size = NPAGES * page_size;
 
   for (i = 1; i < argc - 1; i++) {
      if (argv[i][0] != '-') {
@@ -178,25 +171,32 @@ main (int argc, char *argv[])
     exit (1);
   }
 
+  start = (unsigned char *) malloc (read_size);
+  if (start == 0) {
+    perror ("Cannot allocate necessary memory");
+    exit (1);
+  }
+
   /* Run forever, the program will receive a SIGBUS */
-  for (i = 0, offset = 0, start = NULL, addr = NULL;;) {
+  for (i = 0, offset = 0, addr = NULL; addr < end;) {
 
     if (progressbar ()) {
       display_progressbar (offset, i);
     }
 
-    if (start == NULL || (start + mmap_size - addr) < MAX_SIZE) {
+    if (addr == NULL || (start + read_size - addr) < MAX_SIZE) {
       off_t base_offset;
+      size_t n;
+
       base_offset = offset / page_size * page_size;
 
-      if (start != NULL) {
-	munmap (start, mmap_size);
-      }
-      start = mmap (NULL, mmap_size, PROT_READ, MAP_SHARED, fd, base_offset);
-      if (start == MAP_FAILED) {
-	perror ("Unable to map data");
+      lseek (fd, base_offset, SEEK_SET);
+      n = read (fd, start, read_size);
+      if (n < 0) {
+	perror ("Unable to read data");
 	exit (1);
       }
+      end = start + n;
       addr = start + (offset - base_offset);
     }
 
@@ -224,5 +224,5 @@ main (int argc, char *argv[])
     }
   }
 
-  exit (0);
+  cleanup_and_exit ();
 }
