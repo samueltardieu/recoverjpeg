@@ -1,4 +1,16 @@
 #! /bin/sh
+#
+# This file is part of the recoverjpeg program.
+# Copyright (c) 2004 Samuel Tardieu <sam@rfc1149.net>
+# http://www.rfc1149.net/devel/recoverjpeg
+#
+# recoverjpeg is released under the GNU General Public License
+# version 2 that you can find in the COPYING file bundled with the
+# distribution.
+#
+# Usage: sort-pictures
+# See the sort-pictures manual page for more information.
+#
 
 destdir () {
  if identify $1 > /dev/null 2>&1; then

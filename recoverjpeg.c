@@ -1,3 +1,14 @@
+/*
+ * This file is part of the recoverjpeg program.
+ *
+ * Copyright (c) 2004 Samuel Tardieu <sam@rfc1149.net>
+ * http://www.rfc1149.net/devel/recoverjpeg
+ *
+ * recoverjpeg is released under the GNU General Public License
+ * version 2 that you can find in the COPYING file bundled with the
+ * distribution.
+ */
+
 /* Needed on Linux to work on large files or devices */
 
 #define _FILE_OFFSET_BITS 64
