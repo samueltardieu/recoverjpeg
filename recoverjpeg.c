@@ -25,10 +25,10 @@ progressbar ()
 static void
 display_progressbar (off_t offset, unsigned int n)
 {
-  static int gib_mode = 0;
-  static float old_to_display = 0.0;
-  static int old_n = -1;
   float to_display;
+  static int old_n = -1;
+  static int gib_mode = 0;
+  static off_t old_to_display = 0.0;
 
   if (offset < 1024*1024*1024) {
     to_display = (float) offset / (1024*1024);
@@ -37,11 +37,11 @@ display_progressbar (off_t offset, unsigned int n)
     to_display = (float) offset / (1024*1024*1024);
   }
 
-  if (n != old_n || to_display != old_to_display) {
+  if (n != old_n || (off_t) (to_display * 10.0) != old_to_display) {
     printf ("\rRecovered files: %4u        Analyzed: %4.1f %s  ",
 	    n, to_display, gib_mode ? "GiB" : "MiB");
     old_n = n;
-    old_to_display = to_display;
+    old_to_display = (off_t) (to_display * 10.0);
   }
 }
 
