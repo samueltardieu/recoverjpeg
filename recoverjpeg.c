@@ -1,3 +1,7 @@
+/* Needed on Linux to work on large files or devices */
+
+#define _FILE_OFFSET_BITS 64
+
 #include <sys/types.h>
 #include <sys/uio.h>
 #include <sys/mman.h>
@@ -128,8 +132,7 @@ main (int argc, char *argv[])
     exit (1);
   }
 
-  /* Run forever, the program will end with a segmentation fault, who
-     cares ? */
+  /* Run forever, the program will end with an nmap error */
   for (i = 0, offset = 0;;) {
 
     if (start == NULL || (start + mmap_size - addr) < MAX_SIZE) {
