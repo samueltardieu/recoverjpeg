@@ -35,8 +35,11 @@ where I put it.
 
 Portability
 -----------
-recoverjpeg has been tested on a FreeBSD 5.3-STABLE on ix86 and on
-Debian 3.1 on ix86 (2.6.9 kernel) and UltraSparc (2.4.21 kernel) platforms.
+recoverjpeg has been tested on:
+  - FreeBSD 5.3-STABLE on ix86
+  - Debian 3.1/ix86 (2.6.9 kernel)
+  - Debian 3.1/UltraSparc (2.4.21 kernel)
+  - Solaris 2.9/UltraSparc
 
 You need to ensure that the off_t type from the C library and the
 mmap() functions support offsets of at least the size of the device
