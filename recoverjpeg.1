@@ -14,8 +14,29 @@ Salvaged jpeg pictures are stored under the name \fIimageXXXXX.jpg\fP
 where \fIXXXXX\fP is a five digit number starting at zero.
 .SH OPTIONS
 .TP
+.B \-h
+Display an help message.
+.TP
+.B \-b blocksize
+Set the size of blocks in bytes. On most file systems, setting it to
+512 (the default) will work fine as any large file will be stored on
+512 bytes boundaries. Setting it to 1 maximize the chances of
+finding very small files if the filesystems aggregates them (UFS
+for example) at the expense of a much longer running time.
+.TP
+.B \-m maxsize
+Maximum size of extract jpeg files. If a file would be larger than that,
+it is discarded. The default is 6291456 bytes (6MB).
+.TP
 .B \-q
 Be quiet and do not display anything.
+.TP
+.B \-r readsize
+Set the readsize in bytes. By default, this is 134217728 bytes (128MB).
+Using a large readsize reduces the number of system calls but consumes
+more memory. The readsize will automatically be adjusted to be a multiple
+of the system page size. It \fBmust\fP be greater than the \fImaxsize\fP
+parameter.
 .TP
 .B \-v
 Be verbose and describes the process of jpeg identification. By default, if

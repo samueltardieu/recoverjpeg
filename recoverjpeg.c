@@ -11,9 +11,24 @@
 
 static int verbose = 0;
 static int quiet = 0;
+static size_t max_size = 6*1024*1024;
 
-#define MAX_SIZE (6*1024*1024)
-#define NPAGES (32*1024)
+static void
+usage (int clean_exit)
+{
+  fprintf (stderr, "Usage: recoverjpeg [options] file|device\n");
+  fprintf (stderr, "Options:\n");
+  fprintf (stderr, "   -b blocksize   Block size in bytes\n");
+  fprintf (stderr, "                    (default: 512 bytes)\n");
+  fprintf (stderr, "   -h             This help message\n");
+  fprintf (stderr, "   -m maxsize     Max jpeg file size in bytes\n");
+  fprintf (stderr, "                    (default: 6MB = 6291456 bytes)\n");
+  fprintf (stderr, "   -q             Be quiet\n");
+  fprintf (stderr, "   -r readsize    Size of disk reads in bytes\n");
+  fprintf (stderr, "                    (default: 128MB = 134217728 bytes)\n");
+  fprintf (stderr, "   -v verbose     Replace progress bar by details\n");
+  exit (clean_exit ? 0 : 1);
+}
 
 static inline int
 progressbar ()
@@ -43,6 +58,12 @@ display_progressbar (off_t offset, unsigned int n)
     old_n = n;
     old_to_display = to_display;
   }
+}
+
+static void
+cleanup_progressbar ()
+{
+  printf ("\r                                                     \r");
 }
 
 static size_t
@@ -95,7 +116,7 @@ jpeg_size (unsigned char *start)
       fprintf (stderr, "   Found section %02x of len %d\n", code, size);
     }
 
-    if (size < 2 || size > MAX_SIZE) {
+    if (size < 2 || size > max_size) {
       if (verbose) {
 	fprintf (stderr, "   Section size is out of bounds, aborting\n");
       }
@@ -109,10 +130,10 @@ jpeg_size (unsigned char *start)
       }
 
       for (;
-	   addr-start < MAX_SIZE && (*addr != 0xff || *(addr+1) == 0);
+	   addr-start < max_size && (*addr != 0xff || *(addr+1) == 0);
 	   addr++);
 
-      if (addr - start >= MAX_SIZE) {
+      if (addr - start >= max_size) {
 	if (verbose) {
 	  fprintf (stderr, "too big, aborting\n");
 	}
@@ -127,64 +148,82 @@ jpeg_size (unsigned char *start)
   }
 }
 
-static void
-cleanup_and_exit ()
-{
-  if (progressbar ()) {
-    printf ("\r                                                     \r");
-  }
-  exit (0);  
-}
-
 int
 main (int argc, char *argv[])
 {
   int fd, fdout;
+  size_t read_size, block_size;
   unsigned int i;
   unsigned char *start, *end, *addr;
   size_t size;
   char buffer[100];
-  long page_size, read_size;
+  int page_size;
   off_t offset;
+  char c;
 
-  page_size = getpagesize ();
-  read_size = NPAGES * page_size;
+  read_size = 128*1024*1024;
+  block_size = 512;
 
-  for (i = 1; i < argc - 1; i++) {
-     if (argv[i][0] != '-') {
-      continue;
-    }
-    switch (argv[i][1]) {
-    case 'v': verbose = 1; break;
-    case 'q': quiet = 1; break;
+  while ((c = getopt (argc, argv, "b:hm:qr:v")) != -1) {
+    switch (c) {
+    case 'b':
+      block_size = atoi (optarg);
+      break;
+    case 'm':
+      max_size = atoi (optarg);
+      break;
+    case 'q':
+      quiet = 1;
+      break;
+    case 'r':
+      read_size = atoi (optarg);
+      break;
+    case 'v':
+      verbose = 1;
+      break;
+    default:
+      usage (c == 'h');
     }
   }
 
-  if (argc < 2) {
-    fprintf (stderr, "Usage: recoverjpeg [-v|-q] device\n");
-    exit (1);
+  argc -= optind;
+  argv += optind;
+
+  if (argc != 1) {
+    usage (0);
   }
 
-  fd = open (argv[argc-1], O_RDONLY);
+  fd = open (argv[0], O_RDONLY);
   if (fd < 0) {
     fprintf (stderr, "Unable to open %s for reading\n", argv[argc-1]);
     exit (1);
   }
 
-  start = (unsigned char *) malloc (read_size);
+  page_size = getpagesize ();
+  if (read_size % page_size || read_size < max_size) {
+    if (read_size < max_size) {
+      read_size = max_size;
+    }
+    read_size = (read_size + page_size - 1) / page_size * page_size;
+    if (!quiet) {
+      fprintf (stderr, "Adjusted read size to %u bytes (%u pages)\n",
+	       read_size, read_size / page_size);
+    }
+  }
+
+  start = end = (unsigned char *) malloc (read_size);
   if (start == 0) {
     perror ("Cannot allocate necessary memory");
     exit (1);
   }
 
-  /* Run forever, the program will receive a SIGBUS */
   for (i = 0, offset = 0, addr = NULL; addr < end;) {
 
     if (progressbar ()) {
       display_progressbar (offset, i);
     }
 
-    if (addr == NULL || (start + read_size - addr) < MAX_SIZE) {
+    if (addr == NULL || (start + read_size - addr) < max_size) {
       off_t base_offset;
       size_t n;
 
@@ -202,6 +241,8 @@ main (int argc, char *argv[])
 
     size = jpeg_size (addr);
     if (size > 0) {
+      size_t n;
+
       snprintf (buffer, sizeof buffer, "image%05d.jpg", i++);
       if (verbose) {
 	printf ("%s %d bytes\n", buffer, size);
@@ -216,13 +257,22 @@ main (int argc, char *argv[])
 	exit (1);
       }
       close (fdout);
-      addr += ((size + 511) / 512) * 512;
-      offset += ((size + 511) / 512) * 512;
+
+      n = ((size + block_size - 1) / block_size) * block_size;
+      addr += n;
+      offset += n;
     } else {
-      addr += 512;
-      offset += 512;
+      addr += block_size;
+      offset += block_size;
     }
   }
 
-  cleanup_and_exit ();
+  if (progressbar ()) {
+    cleanup_progressbar ();
+  }
+
+  if (!quiet) {
+    printf ("Restored %d picture%s\n", i, i > 1 ? "s" : "");
+  }
+  exit (0);
 }
