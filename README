@@ -36,7 +36,8 @@ where I put it.
 Portability
 -----------
 recoverjpeg has been tested on:
-  - FreeBSD 5.3-STABLE on ix86
+  - FreeBSD 6.0-CURRENT (from 21 November 2004) on ix86
+  - FreeBSD 5.3-RELEASE on ix86
   - Debian 3.1/ix86 (2.6.9 kernel)
   - Debian 3.1/UltraSparc (2.4.21 kernel)
   - Solaris 2.9/UltraSparc
