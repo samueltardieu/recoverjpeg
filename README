@@ -17,18 +17,24 @@ History
 -------
 recoverjpeg was written on 23 December 2004 after a *huge* mistake:
 a disk containing pictures was repartitioned and a new operating
-system was installed on top. recoverjpeg and sort-pictures ran on this
-80GB disk and retrieved 11GB worth of pictures:
+system was installed on top. recoverjpeg and sort-pictures ran on
+this 80GB disk and rescued 19222 pictures (11GB):
 
-  - 9398 pictures sorted by date (a few of them were corrupted)
+  - 9538 pictures sorted by date (a few of them were corrupted in a
+    way that no software can detect as they are valid JFIF files)
+    and taken on 337 different days
 
-  - 1539 JFIF files without date (some of them were correct pictures
+  - 1310 JFIF files without date (some of them were correct pictures
     whose exif data had been corrupted)
 
-  - 6810 JFIF files too small to be digital pictures (no error there,
-    most of them were thumbnails of real pictures)
+  - 8301 JFIF files too small to be digital pictures (no error there,
+    most of them were thumbnails of real pictures previously made
+    by software such as gqview)
 
-  - 92 invalid JFIF files
+  - 71 invalid JFIF files
+
+  - 4 pictures recorded at a date of 0000-00-00 (probably a bug
+    in the camera used to take the pictures)
 
 Of course, I had a backup of everything, but I cannot seem to remember
 where I put it.
