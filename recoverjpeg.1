@@ -11,7 +11,11 @@ this goal, it scans the filesystem image and looks for a jpeg structure at
 blocks starting at 512 bytes boundaries.
 
 Salvaged jpeg pictures are stored under the name \fIimageXXXXX.jpg\fP
-where \fIXXXXX\fP is a five digit number starting at zero.
+where \fIXXXXX\fP is a five digit number starting at zero. If there are
+more than 100,000 recovered pictures, \fBrecoverjpeg\fI will start using
+six figures numbers and more as soon as needed, but the 100,000 first
+ones will use a five figures number.
+
 .SH OPTIONS
 .TP
 .B \-h
