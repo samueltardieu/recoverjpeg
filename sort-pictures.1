@@ -9,7 +9,8 @@ uses the exif tags in jpeg pictures recovered by \fIrecoverjpeg\fP in
 directories. It creates hard links to organize sorted pictures.
 
 Running \fBsort-pictures\fP will scan the current directory for files
-named after the template \fIimage?????.jpg\fP. A new hardlink will be
+named after the template \fIimage?????*.jpg\fP (\fIimage\fP followed
+by at least five characters followed by \fI.jpg\fP). A new hardlink will be
 created for each file in one of the following directories:
 .TP
 .B invalid

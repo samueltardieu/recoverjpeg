@@ -35,7 +35,7 @@ dependencies () {
 identify > /dev/null 2>&1 || dependencies
 exif > /dev/null 2>&1 || dependencies
 
-for i in image?????.jpg; do
+for i in image?????*.jpg; do
  d=`destdir $i`
  mkdir -p $d
  echo $i $d
