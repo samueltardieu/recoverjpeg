@@ -4,6 +4,7 @@
 
 #include <sys/types.h>
 #include <sys/uio.h>
+#include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -223,7 +224,9 @@ main (int argc, char *argv[])
 
   fd = open (argv[0], O_RDONLY);
   if (fd < 0) {
-    fprintf (stderr, "Unable to open %s for reading\n", argv[argc-1]);
+    fprintf (stderr,
+	     "recoverjpeg: unable to open %s for reading (%s)\n",
+	     argv[argc-1], strerror (errno));
     exit (1);
   }
 
@@ -241,7 +244,9 @@ main (int argc, char *argv[])
 
   start = end = (unsigned char *) malloc (read_size);
   if (start == 0) {
-    perror ("Cannot allocate necessary memory");
+    fprintf (stderr,
+	     "recoverjpeg: cannot allocate necessary memory (%s)\n",
+	     strerror (errno));
     exit (1);
   }
 
@@ -260,7 +265,8 @@ main (int argc, char *argv[])
       lseek (fd, base_offset, SEEK_SET);
       n = read (fd, start, read_size);
       if (n < 0) {
-	perror ("Unable to read data");
+	fprintf (stderr, "recoverjpeg: unable to read data (%s)\n",
+		 strerror (errno));
 	exit (1);
       }
       end = start + n;
