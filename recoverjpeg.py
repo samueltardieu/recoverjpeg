@@ -11,21 +11,6 @@ def is_jpeg (fd, offset):
     fd.seek (offset)
     return fd.read (2) == chr (0xff) + chr (0xd8)
 
-def extract_image (fd, offset, len, fdout):
-    fd.seek (offset)
-    fdout.write (fd.read (len))
-
-def read_data (fd, n):
-    r = ''
-    for i in range (n):
-        c = fd.read (1)
-        r += c
-        if ord (c) == 0xff and False:
-            c = ord (fd.read (1))
-            if c != 0:
-                print "   Warning: incorrect escaped data %02x found" % c
-    return r
-
 def extract_jpeg (fd, offset, outname):
     fd.seek (offset)
     outs = fd.read (2)
