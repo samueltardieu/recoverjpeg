@@ -10,11 +10,12 @@ tries to identify jpeg pictures from a filesystem image. To achieve
 this goal, it scans the filesystem image and looks for a jpeg structure at
 blocks starting at 512 bytes boundaries.
 
-Salvaged jpeg pictures are stored under the name \fIimageXXXXX.jpg\fP
+Salvaged jpeg pictures are stored by default under the name \fIimageXXXXX.jpg\fP
 where \fIXXXXX\fP is a five digit number starting at zero. If there are
-more than 100,000 recovered pictures, \fBrecoverjpeg\fI will start using
+more than 100,000 recovered pictures, \fBrecoverjpeg\fP will start using
 six figures numbers and more as soon as needed, but the 100,000 first
-ones will use a five figures number.
+ones will use a five figures number. Options \-f and \-i can override this
+behaviour.
 
 .SH OPTIONS
 .TP
@@ -27,6 +28,13 @@ Set the size of blocks in bytes. On most file systems, setting it to
 512 bytes boundaries. Setting it to 1 maximize the chances of
 finding very small files if the filesystems aggregates them (UFS
 for example) at the expense of a much longer running time.
+.TP
+.B \-f formatstring
+Set the filename format string (printf-style, default: "image%05d.jpg").
+It is used with the image index as an integer argument.
+.TP
+.B \-i integerindex
+Set the initial index value for image numbering (default: 0).
 .TP
 .B \-m maxsize
 Maximum size of extract jpeg files. If a file would be larger than that,
@@ -91,6 +99,7 @@ PURPOSE.
 .SH KNOWN BUGS
 .B Recoverjpeg
 does not include a complete jpeg parser. You may need to use
-sort-pictures afterwards to identify bogus pictures. Even in this case, jpeg
-pictures may be corrupted but have a correct structure; in this case, parts
-of the picture may be garbled.
+sort-pictures afterwards to identify bogus pictures. Some
+pictures may be corrupted but have a correct structure; in this case, the
+image may be garbled. There is no automated way to detect those pictures
+with a 100% success rate.

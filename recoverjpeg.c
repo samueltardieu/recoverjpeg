@@ -33,7 +33,9 @@ usage (int clean_exit)
   fprintf (stderr, "Options:\n");
   fprintf (stderr, "   -b blocksize   Block size in bytes "
 	   "(default: 512)\n");
+  fprintf (stderr, "   -f format      Format string in printf syntax\n");
   fprintf (stderr, "   -h             This help message\n");
+  fprintf (stderr, "   -i index       Initial picture index\n");
   fprintf (stderr, "   -m maxsize     Max jpeg file size in bytes "
 	   "(default: 6m)\n");
   fprintf (stderr, "   -q             Be quiet\n");
@@ -196,21 +198,30 @@ main (int argc, char *argv[])
 {
   int fd, fdout;
   size_t read_size, block_size;
-  unsigned int i;
+  unsigned int i, begin_index;
   unsigned char *start, *end, *addr;
   size_t size;
   char buffer[100];
   int page_size;
   off_t offset;
+  unsigned char *format;
   char c;
 
   read_size = 128*1024*1024;
   block_size = 512;
+  begin_index = 0;
+  format = "image%05d.jpg";
 
-  while ((c = getopt (argc, argv, "b:hm:qr:v")) != -1) {
+  while ((c = getopt (argc, argv, "b:f:hi:m:qr:v")) != -1) {
     switch (c) {
     case 'b':
       block_size = atoi_suffix (optarg);
+      break;
+    case 'f':
+      format = optarg;
+      break;
+    case 'i':
+      begin_index = atoi (optarg);
       break;
     case 'm':
       max_size = atoi_suffix (optarg);
@@ -264,7 +275,7 @@ main (int argc, char *argv[])
     exit (1);
   }
 
-  for (i = 0, offset = 0, addr = NULL; addr < end;) {
+  for (i = begin_index, offset = 0, addr = NULL; addr < end;) {
 
     if (progressbar ()) {
       display_progressbar (offset, i);
@@ -291,7 +302,7 @@ main (int argc, char *argv[])
     if (size > 0) {
       size_t n;
 
-      snprintf (buffer, sizeof buffer, "image%05d.jpg", i++);
+      snprintf (buffer, sizeof buffer, format, i++);
       if (verbose) {
 	printf ("%s %d bytes\n", buffer, size);
       }
@@ -320,6 +331,7 @@ main (int argc, char *argv[])
   }
 
   if (!quiet) {
+    i -= begin_index;
     printf ("Restored %d picture%s\n", i, i > 1 ? "s" : "");
   }
   exit (0);
