@@ -114,7 +114,7 @@ jpeg_size (unsigned char *start)
       return addr-start;
     }
 
-    if ((code >= 0xd0 && code <= 0xd9) || code == 0x01 || code == 0xff) {
+    if ((code >= 0xd0 && code < 0xd9) || code == 0x01 || code == 0xff) {
       if (verbose) {
 	fprintf (stderr,
 		 "   Found lengthless section %02x\n", code);
