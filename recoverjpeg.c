@@ -195,9 +195,6 @@ main (int argc, char *argv[])
       start = mmap (NULL, mmap_size, PROT_READ, MAP_SHARED, fd, base_offset);
       if (start == MAP_FAILED) {
 	perror ("Unable to map data");
-	fprintf (stderr, "Arguments to mmap were: "
-		 "mmap (NULL, %lu, PROT_READ, MAP_SHARED, %d, %lu)\n",
-		 mmap_size, fd, base_offset);
 	exit (1);
       }
       addr = start + (offset - base_offset);
