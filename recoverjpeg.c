@@ -114,7 +114,7 @@ jpeg_size (unsigned char *start)
       return addr-start;
     }
 
-    if ((code >= 0xd0 && code < 0xd9) || code == 0x01 || code == 0xff) {
+    if (code == 0x01 || code == 0xff) {
       if (verbose) {
 	fprintf (stderr,
 		 "   Found lengthless section %02x\n", code);
@@ -143,7 +143,10 @@ jpeg_size (unsigned char *start)
       }
 
       for (;
-	   addr-start < max_size && (*addr != 0xff || *(addr+1) == 0);
+	   addr-start < max_size &&
+	     (*addr != 0xff ||
+	      *(addr+1) == 0 ||                            /* Escape */
+	      (*(addr + 1) >= 0xd0 && *(addr + 1) <= 0xd7) /* RSTn */);
 	   addr++);
 
       if (addr - start >= max_size) {
@@ -154,7 +157,7 @@ jpeg_size (unsigned char *start)
       }
 
       if (verbose) {
-	fprintf (stderr, "found\n");
+	fprintf (stderr, "found at offset %d\n", addr - start);
       }
 
     }
