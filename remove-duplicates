@@ -9,7 +9,7 @@
 # direction).
 #
 
-if [ x"$1" = "-f" ]; then
+if [ x"$1" = x-f ]; then
   force=true
 else
   force=false
