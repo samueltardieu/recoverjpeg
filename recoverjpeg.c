@@ -12,9 +12,35 @@
 
 static int verbose = 0;
 static int quiet = 0;
+static char size_buffer[10];
 
 #define MAX_SIZE (6*1024*1024)
 #define NPAGES (32*1024)
+
+static inline int
+progressbar ()
+{
+  return !(quiet || verbose);
+}
+
+static char *
+make_size (off_t offset)
+{
+  if (offset < 1024*1024*1024) {
+    snprintf (size_buffer, sizeof size_buffer,
+	      "%4.1f MiB", (float) offset / (1024 * 1024));
+  } else {
+    snprintf (size_buffer, sizeof size_buffer,
+	      "%4.1f GiB", (float) offset / (1024*1024*1024));
+  }
+  return size_buffer;
+}
+
+static void
+display_progressbar (off_t offset, unsigned int n)
+{
+  printf ("\rRecovered files: %4u        Analyzed: %s", n, make_size (offset));
+}
 
 static size_t
 jpeg_size (unsigned char *start)
@@ -99,7 +125,8 @@ jpeg_size (unsigned char *start)
 int
 main (int argc, char *argv[])
 {
-  int i, fd, fdout;
+  int fd, fdout;
+  unsigned int i;
   unsigned char *start, *addr;
   size_t size;
   char buffer[100];
@@ -135,6 +162,10 @@ main (int argc, char *argv[])
   /* Run forever, the program will end with an nmap error */
   for (i = 0, offset = 0;;) {
 
+    if (progressbar ()) {
+      display_progressbar (offset, i);
+    }
+
     if (start == NULL || (start + mmap_size - addr) < MAX_SIZE) {
       off_t base_offset;
       base_offset = offset / page_size * page_size;
@@ -155,8 +186,8 @@ main (int argc, char *argv[])
 
     size = jpeg_size (addr);
     if (size > 0) {
-      sprintf (buffer, "image%05d.jpg", i++);
-      if (!quiet) {
+      snprintf (buffer, sizeof buffer, "image%05d.jpg", i++);
+      if (verbose) {
 	printf ("%s %d bytes\n", buffer, size);
       }
       fdout = open (buffer, O_WRONLY | O_CREAT, 0666);
