@@ -43,7 +43,7 @@ recoverjpeg has been tested on:
   - Solaris 2.9/UltraSparc
 
 You need to ensure that the off_t type from the C library and the
-mmap() functions support offsets of at least the size of the device
+lseek() function support offsets of at least the size of the device
 you want to recover pictures from.
 
 Contact information
