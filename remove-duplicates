@@ -1,0 +1,32 @@
+#! /bin/sh
+#
+# Usage: remove-duplicates [-f]
+#
+# Remove duplicates of the same file in the current directory if -f is
+# given.
+#
+# If -f is not given, duplicate will be identified twice (once in every
+# direction).
+#
+
+if [ x"$1" = "-f" ]; then
+  force=true
+else
+  force=false
+fi
+
+for i in *; do
+  if [ -f "$i" ]; then
+    for j in *; do
+      if [ -f "$j" -a "$i" != "$j" ]; then
+        if cmp $i $j > /dev/null; then
+          echo $j is a duplicate of $i
+          if $force; then
+            echo Removing $j
+            rm -f $j
+          fi
+        fi
+      fi
+    done
+  fi
+done

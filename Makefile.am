@@ -1,7 +1,7 @@
 AUTOMAKE_OPTIONS = foreign
 
 bin_PROGRAMS = recoverjpeg
-bin_SCRIPTS = sort-pictures
+bin_SCRIPTS = sort-pictures remove-duplicates
 
 man_MANS = recoverjpeg.1 sort-pictures.1
 
