@@ -1,4 +1,48 @@
+Installation
+------------
+To install recoverjpeg, as root run
+
+  ./configure && make install
+
+To use sort-pictures, you need to install:
+
+  - exif: http://sourceforge.net/projects/libexif
+  - ImageMagick: http://www.imagemagick.org/
+
+Usage
+-----
 Look at the manual pages for recoverjpeg(1) and sort-pictures(1).
 
+History
+-------
+recoverjpeg was written on 23 December 2004 after a *huge* mistake:
+a disk containing pictures was repartitioned and a new operating
+system was installed on top. recoverjpeg and sort-pictures ran on this
+80GB disk and retrieved 11GB worth of pictures:
+
+  - 9398 pictures sorted by date (a few of them were corrupted)
+
+  - 1539 JFIF files without date (some of them were correct pictures
+    whose exif data had been corrupted)
+
+  - 6810 JFIF files too small to be digital pictures (no error there,
+    most of them were thumbnails of real pictures)
+
+  - 92 invalid JFIF files
+
+Of course, I had a backup of everything, but I cannot seem to remember
+where I put it.
+
+Portability
+-----------
+recoverjpeg has been tested on a FreeBSD 5.3-STABLE on ix86 and on
+Debian 3.1 on ix86 (2.6.9 kernel) and UltraSparc (2.4.21 kernel) platforms.
+
+You need to ensure that the off_t type from the C library and the
+mmap() functions support offsets of at least the size of the device
+you want to recover pictures from.
+
+Contact information
+-------------------
 Home page: http://www.rfc1149.net/devel/recoverjpeg
 Author:    Samuel Tardieu <sam@rfc1149.net> http://www.rfc1149.net/sam
