@@ -275,7 +275,7 @@ main (int argc, char *argv[])
     exit (1);
   }
 
-  for (i = begin_index, offset = 0, addr = NULL; addr < end;) {
+  for (i = 0, offset = 0, addr = NULL; addr < end;) {
 
     if (progressbar ()) {
       display_progressbar (offset, i);
@@ -302,7 +302,8 @@ main (int argc, char *argv[])
     if (size > 0) {
       size_t n;
 
-      snprintf (buffer, sizeof buffer, format, i++);
+      snprintf (buffer, sizeof buffer, format, begin_index + i);
+      i++;
       if (verbose) {
 	printf ("%s %d bytes\n", buffer, size);
       }
@@ -331,7 +332,6 @@ main (int argc, char *argv[])
   }
 
   if (!quiet) {
-    i -= begin_index;
     printf ("Restored %d picture%s\n", i, i > 1 ? "s" : "");
   }
   exit (0);
