@@ -38,7 +38,7 @@ display_progressbar (off_t offset, unsigned int n)
   }
 
   if (n != old_n || to_display != old_to_display) {
-    printf ("\rRecovered files: %4u        Analyzed: %4.1f %s",
+    printf ("\rRecovered files: %4u        Analyzed: %4.1f %s  ",
 	    n, to_display, gib_mode ? "GiB" : "MiB");
     old_n = n;
     old_to_display = to_display;
