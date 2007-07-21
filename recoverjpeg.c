@@ -205,7 +205,7 @@ main (int argc, char *argv[])
   int page_size;
   off_t offset;
   unsigned char *format;
-  char c;
+  int c;
 
   read_size = 128*1024*1024;
   block_size = 512;
