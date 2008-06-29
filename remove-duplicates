@@ -1,6 +1,6 @@
-#! /bin/sh
+#! /usr/bin/python
 #
-# Usage: remove-duplicates [-f]
+# Usage: remove-duplicates
 #
 # Remove duplicates of the same file in the current directory if -f is
 # given.
@@ -9,24 +9,29 @@
 # direction).
 #
 
-if [ x"$1" = x-f ]; then
-  force=true
-else
-  force=false
-fi
+import os
 
-for i in *; do
-  if [ -f "$i" ]; then
-    for j in *; do
-      if [ -f "$j" -a "$i" != "$j" ]; then
-        if cmp $i $j > /dev/null; then
-          echo $j is a duplicate of $i
-          if $force; then
-            echo Removing $j
-            rm -f $j
-          fi
-        fi
-      fi
-    done
-  fi
-done
+def check_duplicate (orig, copy):
+    try:
+        if open(orig).read() == open(copy).read():
+            print "Removing %s which is a copy of %s" % (copy, orig)
+            os.unlink (copy)
+    except:
+        pass
+
+def aggregate ():
+    d = {}
+    for f in os.listdir ('.'):
+        s = os.stat(f)[6]
+        if d.has_key (s): d[s].append (f)
+        else: d[s] = [f]
+    return d
+
+def remove_duplicates (d):
+    for v in d.values():
+        while v:
+            del v[0]
+            for c in v[1:]: check_duplicate (v[0], c)
+
+if __name__ == '__main__':
+    remove_duplicates (aggregate ())
