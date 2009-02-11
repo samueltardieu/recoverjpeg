@@ -1,7 +1,7 @@
 #! /bin/sh
 #
 # This file is part of the recoverjpeg program.
-# Copyright (c) 2004 Samuel Tardieu <sam@rfc1149.net>
+# Copyright (c) 2004-2009 Samuel Tardieu <sam@rfc1149.net>
 # http://www.rfc1149.net/devel/recoverjpeg
 #
 # recoverjpeg is released under the GNU General Public License
@@ -33,7 +33,7 @@ dependencies () {
 }
 
 identify > /dev/null 2>&1 || dependencies
-exif > /dev/null 2>&1 || dependencies
+exif --version > /dev/null 2>&1 || dependencies
 
 for i in image?????*.jpg; do
  d=`destdir $i`
