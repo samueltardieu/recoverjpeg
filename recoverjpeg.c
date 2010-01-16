@@ -113,7 +113,7 @@ jpeg_size (unsigned char *start)
     if (code == 0xd9) {
       if (verbose) {
 	fprintf (stderr,
-		 "   Found end of image after %ld bytes\n", addr-start+1);
+		 "   Found end of image after %ld bytes\n", (long)(addr-start+1));
       }
       return addr-start;
     }
@@ -130,7 +130,7 @@ jpeg_size (unsigned char *start)
     addr += size;
 
     if (verbose) {
-      fprintf (stderr, "   Found section %02x of len %ld\n", code, size);
+      fprintf (stderr, "   Found section %02x of len %ld\n", code, (long)size);
     }
 
     if (size < 2 || size > max_size) {
@@ -161,7 +161,7 @@ jpeg_size (unsigned char *start)
       }
 
       if (verbose) {
-	fprintf (stderr, "found at offset %ld\n", addr - start);
+	fprintf (stderr, "found at offset %ld\n", (long)(addr - start));
       }
 
     }
@@ -238,7 +238,7 @@ main (int argc, char *argv[])
     read_size = (read_size + page_size - 1) / page_size * page_size;
     if (!quiet) {
       fprintf (stderr, "Adjusted read size to %ld bytes\n",
-	       read_size);
+	       (long)read_size);
     }
   }
 
@@ -280,7 +280,7 @@ main (int argc, char *argv[])
       snprintf (buffer, sizeof buffer, format, begin_index + i);
       i++;
       if (verbose) {
-	printf ("%s %ld bytes\n", buffer, size);
+	printf ("%s %ld bytes\n", buffer, (long)size);
       }
       fdout = open (buffer, O_WRONLY | O_CREAT, 0666);
       if (fdout < 0) {
@@ -288,7 +288,7 @@ main (int argc, char *argv[])
 	exit (1);
       }
       if ((size_t) write (fdout, addr, size) != size) {
-	fprintf (stderr, "Unable to write %ld bytes to %s\n", size, buffer);
+	fprintf (stderr, "Unable to write %ld bytes to %s\n", (long)size, buffer);
 	exit (1);
       }
       close (fdout);
