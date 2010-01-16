@@ -57,7 +57,7 @@ static void
 display_progressbar (off_t offset, unsigned int n)
 {
   off_t to_display;
-  static int old_n = -1;
+  static unsigned int old_n = -1;
   static int gib_mode = 0;
   static off_t old_to_display = 0.0;
 
@@ -147,13 +147,13 @@ jpeg_size (unsigned char *start)
       }
 
       for (;
-	   addr-start < max_size &&
+	   (size_t) (addr-start) < max_size &&
 	     (*addr != 0xff ||
 	      *(addr+1) == 0 ||                            /* Escape */
 	      (*(addr + 1) >= 0xd0 && *(addr + 1) <= 0xd7) /* RSTn */);
 	   addr++);
 
-      if (addr - start >= max_size) {
+      if ((size_t) (addr - start) >= max_size) {
 	if (verbose) {
 	  fprintf (stderr, "too big, aborting\n");
 	}
@@ -256,9 +256,9 @@ main (int argc, char *argv[])
       display_progressbar (offset, i);
     }
 
-    if (addr == NULL || (start + read_size - addr) < max_size) {
+    if (addr == NULL || (size_t) (start + read_size - addr) < max_size) {
       off_t base_offset;
-      size_t n;
+      long n;
 
       base_offset = offset / page_size * page_size;
 
@@ -287,7 +287,7 @@ main (int argc, char *argv[])
 	fprintf (stderr, "Unable to open %s for writing\n", buffer);
 	exit (1);
       }
-      if (write (fdout, addr, size) != size) {
+      if ((size_t) write (fdout, addr, size) != size) {
 	fprintf (stderr, "Unable to write %ld bytes to %s\n", size, buffer);
 	exit (1);
       }
