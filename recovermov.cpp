@@ -3,6 +3,8 @@
 #include <sstream>
 #include <fstream>
 
+#include "utils.h"
+
 size_t read_size(std::ifstream& infile) {
 
   size_t size = 0;
@@ -96,7 +98,7 @@ int main(int argc, char** argv) {
   while ((c = getopt (argc, argv, "b:f:hi:m:qr:v")) != -1) {
     switch (c) {
     case 'b':
-      blocksize = atoi(optarg);
+      blocksize = atol_suffix(optarg);
       break;
     case 'n':
       outfilebase = optarg;

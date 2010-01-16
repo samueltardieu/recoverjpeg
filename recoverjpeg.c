@@ -22,6 +22,8 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "utils.h"
+
 static int verbose = 0;
 static int quiet = 0;
 static size_t max_size = 6*1024*1024;
@@ -111,7 +113,7 @@ jpeg_size (unsigned char *start)
     if (code == 0xd9) {
       if (verbose) {
 	fprintf (stderr,
-		 "   Found end of image after %d bytes\n", addr-start+1);
+		 "   Found end of image after %ld bytes\n", addr-start+1);
       }
       return addr-start;
     }
@@ -128,7 +130,7 @@ jpeg_size (unsigned char *start)
     addr += size;
 
     if (verbose) {
-      fprintf (stderr, "   Found section %02x of len %d\n", code, size);
+      fprintf (stderr, "   Found section %02x of len %ld\n", code, size);
     }
 
     if (size < 2 || size > max_size) {
@@ -159,38 +161,11 @@ jpeg_size (unsigned char *start)
       }
 
       if (verbose) {
-	fprintf (stderr, "found at offset %d\n", addr - start);
+	fprintf (stderr, "found at offset %ld\n", addr - start);
       }
 
     }
   }
-}
-
-static unsigned int
-atoi_suffix (char *arg)
-{
-  int multiplier = 1;
-
-  switch (arg[strlen(arg)-1]) {
-  case 'g':
-  case 'G':
-    multiplier = 1024*1024*1024;
-    break;
-  case 'm':
-  case 'M':
-    multiplier = 1024*1024;
-    break;
-  case 'k':
-  case 'K':
-    multiplier = 1024;
-    break;
-  }
-
-  if (multiplier != 1) {
-    arg[strlen(arg)-1] = '\0';
-  }
-
-  return atoi (arg) * multiplier;
 }
 
 int
@@ -204,7 +179,7 @@ main (int argc, char *argv[])
   char buffer[100];
   int page_size;
   off_t offset;
-  unsigned char *format;
+  char *format;
   int c;
 
   read_size = 128*1024*1024;
@@ -215,7 +190,7 @@ main (int argc, char *argv[])
   while ((c = getopt (argc, argv, "b:f:hi:m:qr:v")) != -1) {
     switch (c) {
     case 'b':
-      block_size = atoi_suffix (optarg);
+      block_size = atol_suffix (optarg);
       break;
     case 'f':
       format = optarg;
@@ -224,13 +199,13 @@ main (int argc, char *argv[])
       begin_index = atoi (optarg);
       break;
     case 'm':
-      max_size = atoi_suffix (optarg);
+      max_size = atol_suffix (optarg);
       break;
     case 'q':
       quiet = 1;
       break;
     case 'r':
-      read_size = atoi_suffix (optarg);
+      read_size = atol_suffix (optarg);
       break;
     case 'v':
       verbose = 1;
@@ -262,7 +237,7 @@ main (int argc, char *argv[])
     }
     read_size = (read_size + page_size - 1) / page_size * page_size;
     if (!quiet) {
-      fprintf (stderr, "Adjusted read size to %u bytes\n",
+      fprintf (stderr, "Adjusted read size to %ld bytes\n",
 	       read_size);
     }
   }
@@ -305,7 +280,7 @@ main (int argc, char *argv[])
       snprintf (buffer, sizeof buffer, format, begin_index + i);
       i++;
       if (verbose) {
-	printf ("%s %d bytes\n", buffer, size);
+	printf ("%s %ld bytes\n", buffer, size);
       }
       fdout = open (buffer, O_WRONLY | O_CREAT, 0666);
       if (fdout < 0) {
@@ -313,7 +288,7 @@ main (int argc, char *argv[])
 	exit (1);
       }
       if (write (fdout, addr, size) != size) {
-	fprintf (stderr, "Unable to write %d bytes to %s\n", size, buffer);
+	fprintf (stderr, "Unable to write %ld bytes to %s\n", size, buffer);
 	exit (1);
       }
       close (fdout);

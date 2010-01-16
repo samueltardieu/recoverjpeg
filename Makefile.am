@@ -5,5 +5,5 @@ dist_bin_SCRIPTS = sort-pictures remove-duplicates
 
 dist_man_MANS = recoverjpeg.1 recovermov.1 sort-pictures.1
 
-recoverjpeg_SOURCES = recoverjpeg.c
-recovermov_SOURCES = recovermov.cpp
+recoverjpeg_SOURCES = recoverjpeg.c utils.c
+recovermov_SOURCES = recovermov.cpp utils.c
