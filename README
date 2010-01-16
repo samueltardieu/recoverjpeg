@@ -11,7 +11,8 @@ To use sort-pictures, you need to install:
 
 Usage
 -----
-Look at the manual pages for recoverjpeg(1) and sort-pictures(1).
+Look at the manual pages for recoverjpeg(1), recovermov(1) and
+sort-pictures(1).
 
 History
 -------
@@ -39,6 +40,9 @@ this 80GB disk and rescued 19222 pictures (11GB):
 Of course, I had a backup of everything, but I cannot seem to remember
 where I put it.
 
+On January 2010, Jan Funke added the recovermov(1) program to the package
+to recover lost movies.
+
 Portability
 -----------
 recoverjpeg has been tested on:
@@ -55,7 +59,8 @@ you want to recover pictures from.
 Contact information
 -------------------
 Home page: http://www.rfc1149.net/devel/recoverjpeg
-Author:    Samuel Tardieu <sam@rfc1149.net> http://www.rfc1149.net/sam
+Authors:    Jan Funke <jan.funke@inf.tu-dresden.de>
+            Samuel Tardieu <sam@rfc1149.net> http://www.rfc1149.net/sam
 
 Development
 -----------
