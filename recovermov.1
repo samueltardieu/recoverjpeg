@@ -10,13 +10,6 @@ tries to identify mov movies from a filesystem image. To achieve
 this goal, it scans the filesystem image and looks for a mov structure at
 blocks starting at 512 bytes boundaries.
 
-Salvaged jpeg pictures are stored by default under the name \fIimageXXXXX.jpg\fP
-where \fIXXXXX\fP is a five digit number starting at zero. If there are
-more than 100,000 recovered pictures, \fBrecovermov\fP will start using
-six figures numbers and more as soon as needed, but the 100,000 first
-ones will use a five figures number. Options \-f and \-i can override this
-behaviour.
-
 .SH OPTIONS
 .TP
 .B \-h
