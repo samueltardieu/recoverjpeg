@@ -309,5 +309,9 @@ main (int argc, char *argv[])
   if (!quiet) {
     printf ("Restored %d picture%s\n", i, i > 1 ? "s" : "");
   }
+
+  /* Free allocated memory to keep valgrind happy */
+  free(start);
+
   exit (0);
 }
