@@ -47,6 +47,7 @@ Portability
 -----------
 recoverjpeg has been tested on:
   - Arch Linux x86_64 [2010-03-02]
+  - Cywgin x86 [2010-03-02]
   - Debian Linux unstable i686 [2010-03-02]
   - FreeBSD 6.2 x86
   - FreeBSD 7.1 x86
