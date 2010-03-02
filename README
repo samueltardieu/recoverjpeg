@@ -52,6 +52,8 @@ recoverjpeg has been tested on:
   - FreeBSD 6.2 x86
   - FreeBSD 7.1 x86
   - FreeBSD 7.2 amd64 (Pierre Beyssac)
+  - FreeBSD 9 x86 (Pierre Beyssac)
+  - FreeBSD 9 amd64 (Pierre Beyssac)
   - Mac OS X 10.6.2 x86_64-apple-darwin [GCC + clang] (Ollivier Robert)
   - NetBSD 5.0.2 x86 (Marc Baudoin)
 
