@@ -129,7 +129,7 @@ int main(int argc, char** argv) {
   std::string atom_type;
 
   while (!infile.eof()) {
- 
+
     if (is_mov_file(infile)) {
 
       std::cout << "mov file detected\n";
@@ -149,7 +149,7 @@ int main(int argc, char** argv) {
           std::cout << "encountered special atom (size=" << atom_size << "), aborting\n";
           break;
         }
-    
+
         /* check whether we reached the end of the movie file */
         if (!is_valid_atom_type(atom_type))
           break;
