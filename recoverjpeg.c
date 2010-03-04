@@ -44,6 +44,7 @@ usage (int clean_exit)
   fprintf (stderr, "   -r readsize    Size of disk reads in bytes "
 	   "(default: 128m)\n");
   fprintf (stderr, "   -v verbose     Replace progress bar by details\n");
+  fprintf (stderr, "   -V             Display version and exit\n");
   exit (clean_exit ? 0 : 1);
 }
 
@@ -187,7 +188,7 @@ main (int argc, char *argv[])
   begin_index = 0;
   format = "image%05d.jpg";
 
-  while ((c = getopt (argc, argv, "b:f:hi:m:qr:v")) != -1) {
+  while ((c = getopt (argc, argv, "b:f:hi:m:qr:vV")) != -1) {
     switch (c) {
     case 'b':
       block_size = atol_suffix (optarg);
@@ -210,6 +211,8 @@ main (int argc, char *argv[])
     case 'v':
       verbose = 1;
       break;
+    case 'V':
+      display_version_and_exit("recoverjpeg");
     default:
       usage (c == 'h');
     }

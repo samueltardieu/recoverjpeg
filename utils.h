@@ -20,6 +20,8 @@ extern "C" {
 
 size_t atol_suffix(char *arg);
 
+void display_version_and_exit(const char *program_name) __attribute__((noreturn));
+
 #ifdef __cplusplus
 }
 #endif // __cplusplus

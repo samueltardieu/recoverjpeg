@@ -9,6 +9,8 @@
  * distribution.
  */
 
+#include <config.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "utils.h"
@@ -38,4 +40,10 @@ atol_suffix (char *arg)
   }
 
   return atol(arg) * multiplier;
+}
+
+void display_version_and_exit(const char *program_name)
+{
+  printf("%s %s (from the `%s' package)\n", program_name, VERSION, PACKAGE);
+  exit(0);
 }
