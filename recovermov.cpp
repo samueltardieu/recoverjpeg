@@ -22,7 +22,7 @@ size_t read_size(std::ifstream& infile) {
   return size;
 }
 
-std::string read_atom_type(std::ifstream& infile) {
+const std::string read_atom_type(std::ifstream& infile) {
 
   std::string type = "";
   char byte;
@@ -61,7 +61,7 @@ bool is_mov_file(std::ifstream& infile) {
   return false;
 }
 
-bool is_valid_atom_type(std::string atom_type) {
+bool is_valid_atom_type(const std::string atom_type) {
 
   if (atom_type == "ftyp" ||
       atom_type == "moov" ||
@@ -89,7 +89,7 @@ void print_usage(int exitcode) {
   exit (exitcode);
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char* const* argv) {
 
   size_t  blocksize = 512;
   unsigned int mov_index = 0;
@@ -121,7 +121,7 @@ int main(int argc, char** argv) {
     print_usage(0);
   }
 
-  char* infilename  = argv[0];
+  const char* infilename  = argv[0];
 
   std::ifstream infile(infilename, std::ios_base::in | std::ios_base::binary);
 
