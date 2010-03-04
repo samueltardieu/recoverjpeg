@@ -16,18 +16,18 @@
 #include "utils.h"
 
 size_t
-atol_suffix (char *arg)
+atol_suffix(char *arg)
 {
   long multiplier = 1;
 
-  switch (arg[strlen(arg)-1]) {
+  switch (arg[strlen(arg) - 1]) {
   case 'g':
   case 'G':
-    multiplier = 1024*1024*1024;
+    multiplier = 1024 * 1024 * 1024;
     break;
   case 'm':
   case 'M':
-    multiplier = 1024*1024;
+    multiplier = 1024 * 1024;
     break;
   case 'k':
   case 'K':
@@ -36,13 +36,14 @@ atol_suffix (char *arg)
   }
 
   if (multiplier != 1) {
-    arg[strlen(arg)-1] = '\0';
+    arg[strlen(arg) - 1] = '\0';
   }
 
   return atol(arg) * multiplier;
 }
 
-void display_version_and_exit(const char *program_name)
+void
+display_version_and_exit(const char *program_name)
 {
   printf("%s %s (from the `%s' package)\n", program_name, VERSION, PACKAGE);
   exit(0);

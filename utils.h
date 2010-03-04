@@ -15,15 +15,17 @@
 #include <sys/types.h>
 
 #ifdef __cplusplus
-extern "C" {
-#endif // __cplusplus
+extern "C"
+{
+#endif				// __cplusplus
 
-size_t atol_suffix(char *arg);
+  size_t atol_suffix(char *arg);
 
-void display_version_and_exit(const char *program_name) __attribute__((noreturn));
+  void display_version_and_exit(const char *program_name)
+    __attribute__ ((noreturn));
 
 #ifdef __cplusplus
 }
-#endif // __cplusplus
+#endif				// __cplusplus
 
-#endif // _UTILS_H
+#endif				// _UTILS_H
