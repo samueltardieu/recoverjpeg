@@ -45,6 +45,11 @@ where I put it.
 On January 2010, Jan Funke added the recovermov(1) program to the package
 to recover lost movies.
 
+On April 2012, Samuel Tardieu added the -d option to recoverjpeg(1) to
+circumvent arbitrary limits set on the number of files per directory on
+certain limited filesystems. Also, support of compilation with clang(1)
+was added.
+
 Portability
 -----------
 recoverjpeg has been tested on:
