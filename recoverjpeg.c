@@ -13,6 +13,7 @@
 
 #define _FILE_OFFSET_BITS 64
 
+#include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/uio.h>
 #include <errno.h>
@@ -35,7 +36,8 @@ usage(int clean_exit)
   fprintf(stderr, "Options:\n");
   fprintf(stderr, "   -b blocksize   Block size in bytes "
 	  "(default: 512)\n");
-  fprintf(stderr, "   -f format      Format string in printf syntax\n");
+  fprintf(stderr, "   -d format      Directory format string in printf syntax\n");
+  fprintf(stderr, "   -f format      File format string in printf syntax\n");
   fprintf(stderr, "   -h             This help message\n");
   fprintf(stderr, "   -i index       Initial picture index\n");
   fprintf(stderr, "   -m maxsize     Max jpeg file size in bytes "
@@ -170,6 +172,30 @@ jpeg_size(unsigned char *start)
   }
 }
 
+static char *
+file_name(char *dir_format, char *file_format, unsigned int index)
+{
+  static char dir_buffer[200];
+  char file_buffer[100];
+
+  if (dir_format) {
+    snprintf(dir_buffer, sizeof dir_buffer, dir_format, index / 100);
+    if (mkdir(dir_buffer, 0777) == -1) {
+      fprintf(stderr,
+	      "recoverjpeg: unable to create directory %s (%s)\n",
+	      dir_buffer, strerror(errno));
+      exit(1);
+    }
+    strncat(dir_buffer, "/", sizeof dir_buffer);
+  } else {
+    *dir_buffer = '\0';
+  }
+
+  snprintf(file_buffer, sizeof file_buffer, file_format, index);
+  strncat(dir_buffer, file_buffer, sizeof dir_buffer);
+  return dir_buffer;
+}
+
 int
 main(int argc, char *argv[])
 {
@@ -178,24 +204,28 @@ main(int argc, char *argv[])
   unsigned int i, begin_index;
   unsigned char *start, *end, *addr;
   size_t size;
-  char buffer[100];
   int page_size;
   off_t offset;
-  char *format;
+  char *file_format;
+  char *dir_format;
   int c;
 
   read_size = 128 * 1024 * 1024;
   block_size = 512;
   begin_index = 0;
-  format = "image%05d.jpg";
+  file_format = "image%05d.jpg";
+  dir_format = NULL;
 
-  while ((c = getopt(argc, argv, "b:f:hi:m:qr:vV")) != -1) {
+  while ((c = getopt(argc, argv, "b:d:f:hi:m:qr:vV")) != -1) {
     switch (c) {
     case 'b':
       block_size = atol_suffix(optarg);
       break;
+    case 'd':
+      dir_format = optarg;
+      break;
     case 'f':
-      format = optarg;
+      file_format = optarg;
       break;
     case 'i':
       begin_index = atoi(optarg);
@@ -280,7 +310,7 @@ main(int argc, char *argv[])
     if (size > 0) {
       size_t n;
 
-      snprintf(buffer, sizeof buffer, format, begin_index + i);
+      char *buffer = file_name(dir_format, file_format, begin_index + i);
       i++;
       if (verbose) {
 	printf("%s %ld bytes\n", buffer, (long) size);

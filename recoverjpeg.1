@@ -29,8 +29,14 @@ Set the size of blocks in bytes. On most file systems, setting it to
 finding very small files if the filesystems aggregates them (UFS
 for example) at the expense of a much longer running time.
 .TP
+.B \-d formatstring
+Set the directory format string (printf-style, default: use the
+current directory). When used, 0 will be used for the 100 first images,
+1 for the 100 next images, and so on. The goal of this option is to
+circumvent the directory size limit imposed by some file systems.
+.TP
 .B \-f formatstring
-Set the filename format string (printf-style, default: "image%05d.jpg").
+Set the file name format string (printf-style, default: "image%05d.jpg").
 It is used with the image index as an integer argument.
 .TP
 .B \-i integerindex
