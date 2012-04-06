@@ -88,9 +88,9 @@ cleanup_progressbar()
 }
 
 static size_t
-jpeg_size(unsigned char *start)
+jpeg_size(const unsigned char *start)
 {
-  unsigned char *addr;
+  const unsigned char *addr;
   unsigned char code;
   size_t size;
 
@@ -172,8 +172,8 @@ jpeg_size(unsigned char *start)
   }
 }
 
-static char *
-file_name(char *dir_format, char *file_format, unsigned int index)
+static const char *
+file_name(const char *dir_format, const char *file_format, unsigned int index)
 {
   static char dir_buffer[200];
   char file_buffer[100];
@@ -197,7 +197,7 @@ file_name(char *dir_format, char *file_format, unsigned int index)
 }
 
 int
-main(int argc, char *argv[])
+main(int argc, const char const *argv[])
 {
   int fd, fdout;
   size_t read_size, block_size;
@@ -206,8 +206,8 @@ main(int argc, char *argv[])
   size_t size;
   int page_size;
   off_t offset;
-  char *file_format;
-  char *dir_format;
+  const char *file_format;
+  const char *dir_format;
   int c;
 
   read_size = 128 * 1024 * 1024;
@@ -216,7 +216,7 @@ main(int argc, char *argv[])
   file_format = "image%05d.jpg";
   dir_format = NULL;
 
-  while ((c = getopt(argc, argv, "b:d:f:hi:m:qr:vV")) != -1) {
+  while ((c = getopt(argc, (char * const *) argv, "b:d:f:hi:m:qr:vV")) != -1) {
     switch (c) {
     case 'b':
       block_size = atol_suffix(optarg);
@@ -310,7 +310,7 @@ main(int argc, char *argv[])
     if (size > 0) {
       size_t n;
 
-      char *buffer = file_name(dir_format, file_format, begin_index + i);
+      const char *buffer = file_name(dir_format, file_format, begin_index + i);
       i++;
       if (verbose) {
 	printf("%s %ld bytes\n", buffer, (long) size);
