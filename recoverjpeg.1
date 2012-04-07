@@ -81,12 +81,12 @@ Recover as many pictures as possible from a crashed ReiserFS file system
 (which does not necessarily store pictures at block boundaries) in
 \fI/dev/hdb1\fP:
 
-  recoverjpeg -b 1 /dev/hdb1
+  recoverjpeg \-b 1 /dev/hdb1
 
 Do the same thing in a memory constrained environment where no more than
 16MB of RAM can be used for the operation:
 
-  recoverjpeg -b 1 -r 16m /dev/hdb1
+  recoverjpeg \-b 1 \-r 16m /dev/hdb1
 
 .SH AUTHOR
 .B Recoverjpeg
