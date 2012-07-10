@@ -1,4 +1,4 @@
-.TH RECOVERJPEG "1" "January 2010" "recoverjpeg" "User Commands"
+.TH RECOVERJPEG "1" "July 2012" "recoverjpeg" "User Commands"
 .SH NAME
 recoverjpeg \- recover jpeg pictures from a filesystem image
 .SH SYNOPSIS
@@ -56,6 +56,9 @@ more memory. The readsize will automatically be adjusted to be a multiple
 of the system page size. It \fBmust\fP be greater than the \fImaxsize\fP
 parameter.
 .TP
+.B \-s cutoffsize
+Set the cutoff size in bytes. Files smaller than that will be ignored.
+.TP
 .B \-v
 Be verbose and describes the process of jpeg identification. By default, if
 this flag is not used,
@@ -76,6 +79,10 @@ Recover as many pictures as possible from the memory card located in
 \fI/dev/sdc\fP:
 
   recoverjpeg /dev/sdc
+
+Do the same thing but ignore files smaller than one megabyte:
+
+  recoverjpeg -s 1m /dev/sdc
 
 Recover as many pictures as possible from a crashed ReiserFS file system
 (which does not necessarily store pictures at block boundaries) in

@@ -28,6 +28,7 @@
 static int verbose = 0;
 static int quiet = 0;
 static size_t max_size = 6 * 1024 * 1024;
+static size_t ignore_size = 0;
 
 static void
 usage(int clean_exit)
@@ -45,6 +46,7 @@ usage(int clean_exit)
   fprintf(stderr, "   -q             Be quiet\n");
   fprintf(stderr, "   -r readsize    Size of disk reads in bytes "
 	  "(default: 128m)\n");
+  fprintf(stderr, "   -s cutoff      Minimal file size in bytes to restore\n");
   fprintf(stderr, "   -v verbose     Replace progress bar by details\n");
   fprintf(stderr, "   -V             Display version and exit\n");
   exit(clean_exit ? 0 : 1);
@@ -216,7 +218,7 @@ main(int argc, const char const *argv[])
   file_format = "image%05d.jpg";
   dir_format = NULL;
 
-  while ((c = getopt(argc, (char * const *) argv, "b:d:f:hi:m:qr:vV")) != -1) {
+  while ((c = getopt(argc, (char * const *) argv, "b:d:f:hi:m:qr:s:vV")) != -1) {
     switch (c) {
     case 'b':
       block_size = atol_suffix(optarg);
@@ -238,6 +240,9 @@ main(int argc, const char const *argv[])
       break;
     case 'r':
       read_size = atol_suffix(optarg);
+      break;
+    case 's':
+      ignore_size = atol_suffix(optarg) - 1;
       break;
     case 'v':
       verbose = 1;
@@ -307,7 +312,7 @@ main(int argc, const char const *argv[])
     }
 
     size = jpeg_size(addr);
-    if (size > 0) {
+    if (size > ignore_size) {
       size_t n;
 
       const char *buffer = file_name(dir_format, file_format, begin_index + i);
