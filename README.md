@@ -25,7 +25,7 @@ Mike Ingle wrote about working with a drive that cannot be read because of error
 > 
 >    dd if=/dev/sdc of=recovery-image bs=65536 conv=noerror
 > 
-> and that made an image file while skipping over the bad blocks without aborting. Then I would up with a
+> and that made an image file while skipping over the bad blocks without aborting. Then I would end up with a
 > 500 GByte file which I ran recoverjpeg on, and it worked.
 
 History
