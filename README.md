@@ -16,6 +16,18 @@ Usage
 Look at the manual pages for recoverjpeg(1), recovermov(1) and
 sort-pictures(1).
 
+What to do if the medium is physically damaged?
+-----------------------------------------------
+Mike Ingle wrote about working with a drive that cannot be read because of errors:
+
+> The hard drive was more complicated because recoverjpeg would abort on the first bad sector it hit.
+> I tried using a named pipe and that did not work, so I did:
+> 
+>    dd if=/dev/sdc of=recovery-image bs=65536 conv=noerror
+> 
+> and that made an image file while skipping over the bad blocks without aborting. Then I would up with a
+> 500 GByte file which I ran recoverjpeg on, and it worked.
+
 History
 -------
 recoverjpeg was written on 23 December 2004 after a *huge* mistake:
