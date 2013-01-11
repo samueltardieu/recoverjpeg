@@ -28,6 +28,11 @@ Mike Ingle wrote about working with a drive that cannot be read because of error
 > and that made an image file while skipping over the bad blocks without aborting. Then I would end up with a
 > 500 GByte file which I ran recoverjpeg on, and it worked.
 
+Another option suggested by Florian Schmaus is to use the dedicated
+[ddrescue](http://www.gnu.org/software/ddrescue/ddrescue.html) which may cope with
+even more desperate situations where multiple passes are needed in order
+to recover the physical medium content.
+
 History
 -------
 recoverjpeg was written on 23 December 2004 after a *huge* mistake:
