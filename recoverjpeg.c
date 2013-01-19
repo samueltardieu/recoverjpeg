@@ -182,7 +182,7 @@ file_name(const char *dir_format, const char *file_format, unsigned int index)
 
   if (dir_format) {
     snprintf(dir_buffer, sizeof dir_buffer, dir_format, index / 100);
-    if (access(dir_buffer, F_OK) == -1 && mkdir(dir_buffer, 0777) == -1) {
+    if (mkdir(dir_buffer, 0777) == -1 && errno != EEXIST) {
       fprintf(stderr,
 	      "recoverjpeg: unable to create directory %s (%s)\n",
 	      dir_buffer, strerror(errno));
