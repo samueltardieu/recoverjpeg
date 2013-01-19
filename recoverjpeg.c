@@ -199,7 +199,7 @@ file_name(const char *dir_format, const char *file_format, unsigned int index)
 }
 
 int
-main(int argc, const char const *argv[])
+main(int argc, const char * const argv[])
 {
   int fd, fdout;
   size_t read_size, block_size;
