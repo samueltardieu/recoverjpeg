@@ -188,13 +188,13 @@ file_name(const char *dir_format, const char *file_format, unsigned int index)
 	      dir_buffer, strerror(errno));
       exit(1);
     }
-    strncat(dir_buffer, "/", sizeof dir_buffer);
+    strncat(dir_buffer, "/", sizeof dir_buffer - 1);
   } else {
     *dir_buffer = '\0';
   }
 
   snprintf(file_buffer, sizeof file_buffer, file_format, index);
-  strncat(dir_buffer, file_buffer, sizeof dir_buffer);
+  strncat(dir_buffer, file_buffer, sizeof dir_buffer - strlen(dir_buffer) - 1);
   return dir_buffer;
 }
 
