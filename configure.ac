@@ -1,6 +1,6 @@
-AC_INIT
+AC_INIT([recoverjpeg], [2.2.1])
 AC_CONFIG_SRCDIR([recoverjpeg.c])
-AM_INIT_AUTOMAKE([recoverjpeg], [2.2.1])
+AM_INIT_AUTOMAKE
 AC_CONFIG_HEADER([config.h])
 AC_PROG_CC
 AC_PROG_CXX
