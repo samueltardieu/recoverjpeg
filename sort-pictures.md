@@ -37,6 +37,7 @@ A directory representing the date at which the picture was taken.
 # SEE ALSO
 
 `recoverjpeg`(1) `remove-duplicates`(1)
+
 # COPYRIGHT
 
 Copyright (c) 2004-2013 Samuel Tardieu <sam@rfc1149.net>.

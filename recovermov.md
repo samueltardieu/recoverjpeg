@@ -16,6 +16,12 @@ Recovermov tries to identify mov movies from a filesystem image. To achieve
 this goal, it scans the filesystem image and looks for a mov structure at
 blocks starting at 512 bytes boundaries.
 
+Note that *device* is not necessarily a physical device. It may also be
+a file containing a copy of the faulty device in order to reduce the
+actual processing time and the stress imposed to an already defective
+hardware. `dd`(1) or `ddrescue`(1) may be used to create such a working
+copy.
+
 # OPTIONS
 
 -h

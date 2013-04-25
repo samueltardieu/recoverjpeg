@@ -19,8 +19,14 @@ Salvaged jpeg pictures are stored by default under the name
 *imageXXXXX.jpg* where *XXXXX* is a five digit number starting at
 zero. If there are more than 100,000 recovered pictures, recoverjpeg
 will start using six figures numbers and more as soon as needed, but
-the 100,000 first ones will use a five figures number. Options -f and
--i can override this behaviour.
+the 100,000 first ones will use a five figures number. Options *-f* and
+*-i* can override this behaviour.
+
+Note that *device* is not necessarily a physical device. It may also be
+a file containing a copy of the faulty device in order to reduce the
+actual processing time and the stress imposed to an already defective
+hardware. `dd`(1) or `ddrescue`(1) may be used to create such a working
+copy.
 
 # OPTIONS
 
