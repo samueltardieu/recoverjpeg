@@ -15,8 +15,6 @@ ChangeLog: always
 recoverjpeg_SOURCES = recoverjpeg.c utils.c utils.h
 recovermov_SOURCES = recovermov.cpp utils.c utils.h
 
-recovermov_LDADD = -lstdc++
-
 .md.1:
 	pandoc -s -w man $< -o $@
 
