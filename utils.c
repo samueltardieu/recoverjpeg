@@ -21,18 +21,21 @@ atol_suffix(char *arg)
   long multiplier = 1;
 
   switch (arg[strlen(arg) - 1]) {
+  case 't':
+  case 'T':
+    multiplier *= 1024;
+    // Fallthrough
   case 'g':
   case 'G':
-    multiplier = 1024 * 1024 * 1024;
-    break;
+    multiplier *= 1024;
+    // Fallthrough
   case 'm':
   case 'M':
-    multiplier = 1024 * 1024;
-    break;
+    multiplier *= 1024;
+    // Fallthrough
   case 'k':
   case 'K':
-    multiplier = 1024;
-    break;
+    multiplier *= 1024;
   }
 
   if (multiplier != 1) {

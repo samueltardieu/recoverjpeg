@@ -78,8 +78,8 @@ recovered.
 -V
 : Display program version and exit.
 
-All the sizes may be suffixed by a *k*, *m* or *g* letter to
-indicate KiB, MiB or GiB. For example, 6m correspond to 6 MiB (6291456
+All the sizes may be suffixed by a *k*, *m*, *g*, or *t* letter to
+indicate KiB, MiB, GiB, or TiB. For example, 6m correspond to 6 MiB (6291456
 bytes).
 
 # EXAMPLES
