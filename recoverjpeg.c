@@ -47,7 +47,7 @@ usage(int clean_exit)
   fprintf(stderr, "   -r readsize    Size of disk reads in bytes "
 	  "(default: 128m)\n");
   fprintf(stderr, "   -s cutoff      Minimal file size in bytes to restore\n");
-  fprintf(stderr, "   -v verbose     Replace progress bar by details\n");
+  fprintf(stderr, "   -v             Be verbose\n");
   fprintf(stderr, "   -V             Display version and exit\n");
   exit(clean_exit ? 0 : 1);
 }
