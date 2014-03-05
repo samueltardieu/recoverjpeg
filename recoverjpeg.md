@@ -69,6 +69,12 @@ page size. It **must** be greater than the *maxsize* parameter.
 -s *cutoffsize*
 : Set the cutoff size in bytes. Files smaller than that will be ignored.
 
+-S *skipsize*
+: Set the number of bytes to skip at the beginning of the filesystem image.
+This can be used to resume an interrupted session, in conjunction with
+*-i*. The number of bytes may be rounded down to be a multiple of a
+memory page size in order to improve performances.
+
 -v
 : Be verbose and describes the process of jpeg identification. By default,
 if this flag is not used, recoverjpeg will print a progress bar showing

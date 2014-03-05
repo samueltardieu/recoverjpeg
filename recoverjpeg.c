@@ -47,6 +47,7 @@ usage(int clean_exit)
   fprintf(stderr, "   -r readsize    Size of disk reads in bytes "
 	  "(default: 128m)\n");
   fprintf(stderr, "   -s cutoff      Minimal file size in bytes to restore\n");
+  fprintf(stderr, "   -S skipsize    Size to skip at the beginning\n");
   fprintf(stderr, "   -v             Be verbose\n");
   fprintf(stderr, "   -V             Display version and exit\n");
   exit(clean_exit ? 0 : 1);
@@ -207,18 +208,19 @@ main(int argc, const char * const argv[])
   unsigned char *start, *end, *addr;
   size_t size;
   int page_size;
-  off_t offset;
+  off_t offset, skip_size;
   const char *file_format;
   const char *dir_format;
   int c;
 
   read_size = 128 * 1024 * 1024;
   block_size = 512;
+  skip_size = 0;
   begin_index = 0;
   file_format = "image%05d.jpg";
   dir_format = NULL;
 
-  while ((c = getopt(argc, (char * const *) argv, "b:d:f:hi:m:qr:s:vV")) != -1) {
+  while ((c = getopt(argc, (char * const *) argv, "b:d:f:hi:m:qr:s:S:vV")) != -1) {
     switch (c) {
     case 'b':
       block_size = atol_suffix(optarg);
@@ -243,6 +245,9 @@ main(int argc, const char * const argv[])
       break;
     case 's':
       ignore_size = atol_suffix(optarg) - 1;
+      break;
+    case 'S':
+      skip_size = atol_suffix(optarg);
       break;
     case 'v':
       verbose = 1;
@@ -288,7 +293,14 @@ main(int argc, const char * const argv[])
     exit(1);
   }
 
-  for (i = 0, offset = 0, addr = NULL; addr < end;) {
+  if (skip_size % page_size) {
+    skip_size = (skip_size / page_size) * page_size;
+    if (!quiet) {
+      fprintf(stderr, "Adjusted skip size to %ld bytes\n", (long) skip_size);
+    }
+  }
+
+  for (i = 0, offset = skip_size, addr = NULL; addr < end;) {
 
     if (progressbar()) {
       display_progressbar(offset, i);
