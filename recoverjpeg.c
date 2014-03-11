@@ -65,7 +65,7 @@ display_progressbar(off_t offset, unsigned int n)
   off_t to_display;
   static unsigned int old_n = -1;
   static int gib_mode = 0;
-  static off_t old_to_display = 0.0;
+  static off_t old_to_display = 0;
 
   if (offset < 1024 * 1024 * 1024) {
     to_display = offset / 1024 * 10 / 1024;
