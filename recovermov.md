@@ -16,6 +16,12 @@ Recovermov tries to identify mov movies from a filesystem image. To achieve
 this goal, it scans the filesystem image and looks for a mov structure at
 blocks starting at 512 bytes boundaries.
 
+`recovermov` stores the recovered movies into the current directory.
+If you want it to store them elsewhere, just go to the directory you
+want `recovermov` to save the movies into (using the `cd` command at
+the shell prompt) and start `recovermov` from there, or use the *-o*
+option.
+
 Note that *device* is not necessarily a physical device. It may also be
 a file containing a copy of the faulty device in order to reduce the
 actual processing time and the stress imposed to an already defective
@@ -39,6 +45,11 @@ for example) at the expense of a much longer running time.
 
 -n *basename*
 : Basename to use to create the salvaged files. Default is `video_`.
+
+-o *directory*
+: Change the working directory before restoring files. Use this option to
+restore files into a directory with enough space instead of the current
+directory.
 
 -V
 : Display program version and exit.

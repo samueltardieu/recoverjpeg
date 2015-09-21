@@ -86,6 +86,7 @@ void print_usage(int exitcode) {
   std::cerr << "                  (default: \"video_\")\n";
   std::cerr << "   -h             This help message\n";
   std::cerr << "   -i index       Initial movie index\n";
+  std::cerr << "   -o directory   Restore mov files into this directory\n";
   std::cerr << "   -V             Display version and exit\n";
   exit (exitcode);
 }
@@ -97,7 +98,7 @@ int main(int argc, char* const* argv) {
   std::string outfilebase = "video_";
 
   int c;
-  while ((c = getopt (argc, argv, "b:f:hi:m:qr:vV")) != -1) {
+  while ((c = getopt (argc, argv, "b:f:hi:m:o:qr:vV")) != -1) {
     switch (c) {
     case 'b':
       blocksize = atol_suffix(optarg);
@@ -107,6 +108,9 @@ int main(int argc, char* const* argv) {
       break;
     case 'i':
       mov_index = atoi(optarg);
+      break;
+    case 'o':
+      move_to(optarg);
       break;
     case 'V':
       display_version_and_exit("recovermov");

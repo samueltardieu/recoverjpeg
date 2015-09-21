@@ -22,6 +22,12 @@ will start using six figures numbers and more as soon as needed, but
 the 100,000 first ones will use a five figures number. Options *-f* and
 *-i* can override this behaviour.
 
+`recoverjpeg` stores the recovered pictures into the current directory.
+If you want it to store them elsewhere, just go to the directory you
+want `recoverjpeg` to save the images into (using the `cd` command at
+the shell prompt) and start `recoverjpeg` from there, or use the *-o*
+option.
+
 Note that *device* is not necessarily a physical device. It may also be
 a file containing a copy of the faulty device in order to reduce the
 actual processing time and the stress imposed to an already defective
@@ -56,6 +62,11 @@ the directory size limit imposed by some file systems.
 -m *maxsize*
 : Maximum size of extract jpeg files. If a file would be larger than that,
 it is discarded. The default is 6 MiB.
+
+-o *directory*
+: Change the working directory before restoring files. Use this option to
+restore files into a directory with enough space instead of the current
+directory.
 
 -q
 : Be quiet and do not display anything.

@@ -43,6 +43,7 @@ usage(int clean_exit)
   fprintf(stderr, "   -i index       Initial picture index\n");
   fprintf(stderr, "   -m maxsize     Max jpeg file size in bytes "
 	  "(default: 6m)\n");
+  fprintf(stderr, "   -o directory   Restore jpeg files into this directory\n");
   fprintf(stderr, "   -q             Be quiet\n");
   fprintf(stderr, "   -r readsize    Size of disk reads in bytes "
 	  "(default: 128m)\n");
@@ -220,7 +221,7 @@ main(int argc, const char * const argv[])
   file_format = "image%05d.jpg";
   dir_format = NULL;
 
-  while ((c = getopt(argc, (char * const *) argv, "b:d:f:hi:m:qr:s:S:vV")) != -1) {
+  while ((c = getopt(argc, (char * const *) argv, "b:d:f:hi:m:o:qr:s:S:vV")) != -1) {
     switch (c) {
     case 'b':
       block_size = atol_suffix(optarg);
@@ -236,6 +237,9 @@ main(int argc, const char * const argv[])
       break;
     case 'm':
       max_size = atol_suffix(optarg);
+      break;
+    case 'o':
+      move_to(optarg);
       break;
     case 'q':
       quiet = 1;

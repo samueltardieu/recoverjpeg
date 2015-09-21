@@ -24,6 +24,8 @@ extern "C"
   void display_version_and_exit(const char *program_name)
     __attribute__ ((noreturn));
 
+  void move_to(const char *directory);
+
 #ifdef __cplusplus
 }
 #endif				// __cplusplus

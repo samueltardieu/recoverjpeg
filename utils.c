@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include "utils.h"
 
 size_t
@@ -50,4 +51,15 @@ display_version_and_exit(const char *program_name)
 {
   printf("%s %s (from the `%s' package)\n", program_name, VERSION, PACKAGE);
   exit(0);
+}
+
+void
+move_to(const char *directory)
+{
+  if (chdir(directory) != 0) {
+    char buffer[128];
+    snprintf(buffer, sizeof buffer, "cannot change directory to `%s'", directory);
+    perror(buffer);
+    exit(1);
+  }
 }
