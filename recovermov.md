@@ -1,6 +1,6 @@
 % RECOVERMOV(1) Recovermov User Manuals
 % Jan Funke <jan.funke@inf.tu-dresden.de>
-% April 25, 2013
+% September 22, 2015
 
 # NAME
 

@@ -1,6 +1,6 @@
 %REMOVE-DUPLICATES(1) User Manuals
 %Samuel Tardieu <sam@rfc1149.net>
-%April 25, 2013
+%September 22, 2015
 
 # NAME
 

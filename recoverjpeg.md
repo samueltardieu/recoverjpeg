@@ -1,6 +1,6 @@
 % RECOVERJPEG(1) Recoverjpeg User Manuals
 % Samuel Tardieu <sam@rfc1149.net>
-% April 25, 2013
+% September 22, 2015
 
 # NAME
 recoverjpeg - recover jpeg pictures from a filesystem image
