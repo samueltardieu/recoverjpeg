@@ -32,8 +32,8 @@ dependencies () {
  exit 1
 }
 
-identify > /dev/null 2>&1 || dependencies
-exif --version > /dev/null 2>&1 || dependencies
+type identify > /dev/null 2>&1 || dependencies
+type exif > /dev/null 2>&1 || dependencies
 
 for i in image?????*.jpg; do
  d=`destdir $i`
