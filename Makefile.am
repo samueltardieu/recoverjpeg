@@ -17,5 +17,3 @@ recovermov_SOURCES = recovermov.cpp utils.c utils.h
 
 .md.1:
 	pandoc -s -w man $< -o $@
-
-CLEANFILES = recoverjpeg.1
