@@ -33,15 +33,15 @@ atol_suffix(char *arg)
   case 't':
   case 'T':
     multiplier *= 1024;
-    // Fallthrough
+    /* Fallthrough */
   case 'g':
   case 'G':
     multiplier *= 1024;
-    // Fallthrough
+    /* Fallthrough */
   case 'm':
   case 'M':
     multiplier *= 1024;
-    // Fallthrough
+    /* Fallthrough */
   case 'k':
   case 'K':
     multiplier *= 1024;
@@ -80,6 +80,7 @@ record_chdir(const char *directory)
 void
 perform_chdirs()
 {
+  move_t *to_free;
   move_t *p = chdirs;
   while (p != NULL) {
     if (chdir(p->target) != 0) {
@@ -88,7 +89,7 @@ perform_chdirs()
       perror(buffer);
       exit(1);
     }
-    move_t *to_free = p;
+    to_free = p;
     p = p->next;
     free(to_free);
   }

@@ -17,7 +17,7 @@
 #ifdef __cplusplus
 extern "C"
 {
-#endif				// __cplusplus
+#endif				/* __cplusplus */
 
   size_t atol_suffix(char *arg);
 
@@ -30,6 +30,6 @@ extern "C"
 
 #ifdef __cplusplus
 }
-#endif				// __cplusplus
+#endif				/* __cplusplus */
 
-#endif				// _UTILS_H
+#endif				/* _UTILS_H */
