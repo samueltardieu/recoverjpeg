@@ -1,0 +1,9 @@
+#! /bin/sh
+#
+
+RECOVERJPEG="$PWD/../src/recoverjpeg"
+trap "rm -rf $PWD/$0.dir" INT QUIT TERM EXIT
+mkdir "$0.dir"
+cd "$0.dir"
+
+${RECOVERJPEG} -o foo ${RECOVERJPEG}
