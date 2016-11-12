@@ -110,7 +110,7 @@ int main(int argc, char* const* argv) {
       mov_index = atoi(optarg);
       break;
     case 'o':
-      move_to(optarg);
+      record_chdir(optarg);
       break;
     case 'V':
       display_version_and_exit("recovermov");
@@ -129,6 +129,8 @@ int main(int argc, char* const* argv) {
   const char* infilename  = argv[0];
 
   std::ifstream infile(infilename, std::ios_base::in | std::ios_base::binary);
+
+  perform_chdirs();
 
   size_t      atom_size;
   std::string atom_type;

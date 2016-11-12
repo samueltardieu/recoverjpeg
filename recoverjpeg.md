@@ -1,6 +1,6 @@
 % RECOVERJPEG(1) Recoverjpeg User Manuals
 % Samuel Tardieu <sam@rfc1149.net>
-% September 22, 2015
+% November 12, 2016
 
 # NAME
 recoverjpeg - recover jpeg pictures from a filesystem image
@@ -66,7 +66,7 @@ it is discarded. The default is 6 MiB.
 -o *directory*
 : Change the working directory before restoring files. Use this option to
 restore files into a directory with enough space instead of the current
-directory.
+directory. This option can be repeated.
 
 -q
 : Be quiet and do not display anything.

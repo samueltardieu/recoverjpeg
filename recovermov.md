@@ -1,6 +1,6 @@
 % RECOVERMOV(1) Recovermov User Manuals
 % Jan Funke <jan.funke@inf.tu-dresden.de>
-% September 22, 2015
+% November 12, 2016
 
 # NAME
 
@@ -49,7 +49,7 @@ for example) at the expense of a much longer running time.
 -o *directory*
 : Change the working directory before restoring files. Use this option to
 restore files into a directory with enough space instead of the current
-directory.
+directory. This option can be repeated.
 
 -V
 : Display program version and exit.

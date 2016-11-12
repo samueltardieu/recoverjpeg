@@ -191,17 +191,19 @@ file_name(const char *dir_format, const char *file_format, unsigned int index)
       exit(1);
     }
     strncat(dir_buffer, "/", sizeof dir_buffer - 1);
-  } else {
+  }
+  else {
     *dir_buffer = '\0';
   }
 
   snprintf(file_buffer, sizeof file_buffer, file_format, index);
-  strncat(dir_buffer, file_buffer, sizeof dir_buffer - strlen(dir_buffer) - 1);
+  strncat(dir_buffer, file_buffer,
+	  sizeof dir_buffer - strlen(dir_buffer) - 1);
   return dir_buffer;
 }
 
 int
-main(int argc, const char * const argv[])
+main(int argc, const char *const argv[])
 {
   int fd, fdout;
   size_t read_size, block_size;
@@ -239,7 +241,7 @@ main(int argc, const char * const argv[])
       max_size = atol_suffix(optarg);
       break;
     case 'o':
-      move_to(optarg);
+      record_chdir(optarg);
       break;
     case 'q':
       quiet = 1;
@@ -277,6 +279,8 @@ main(int argc, const char * const argv[])
 	    argv[argc - 1], strerror(errno));
     exit(1);
   }
+
+  perform_chdirs();
 
   page_size = getpagesize();
   if (read_size % page_size || read_size < max_size) {

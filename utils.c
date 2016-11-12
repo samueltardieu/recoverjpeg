@@ -16,6 +16,14 @@
 #include <unistd.h>
 #include "utils.h"
 
+typedef struct move_s
+{
+  const char *target;
+  struct move_s *next;
+} move_t;
+
+static move_t *chdirs = NULL;
+
 size_t
 atol_suffix(char *arg)
 {
@@ -54,12 +62,34 @@ display_version_and_exit(const char *program_name)
 }
 
 void
-move_to(const char *directory)
+record_chdir(const char *directory)
 {
-  if (chdir(directory) != 0) {
-    char buffer[128];
-    snprintf(buffer, sizeof buffer, "cannot change directory to `%s'", directory);
-    perror(buffer);
+  move_t **ptr = &chdirs;
+  while (*ptr != NULL) {
+    ptr = &(*ptr)->next;
+  }
+  *ptr = malloc(sizeof(move_t));
+  if (*ptr == NULL) {
+    perror("malloc");
     exit(1);
+  }
+  (*ptr)->target = directory;
+  (*ptr)->next = NULL;
+}
+
+void
+perform_chdirs()
+{
+  move_t *p = chdirs;
+  while (p != NULL) {
+    if (chdir(p->target) != 0) {
+      char buffer[512];
+      snprintf(buffer, sizeof buffer, "cannot change directory to `%s'", p->target);
+      perror(buffer);
+      exit(1);
+    }
+    move_t *to_free = p;
+    p = p->next;
+    free(to_free);
   }
 }
