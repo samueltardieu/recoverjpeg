@@ -1,7 +1,7 @@
 /*
  * This file is part of the recoverjpeg program.
  *
- * Copyright (c) 2004-2012 Samuel Tardieu <sam@rfc1149.net>
+ * Copyright (c) 2004-2016 Samuel Tardieu <sam@rfc1149.net>
  * http://www.rfc1149.net/devel/recoverjpeg
  *
  * recoverjpeg is released under the GNU General Public License

@@ -1,3 +1,15 @@
+/*
+ * This file is part of the recoverjpeg program.
+ *
+ * Copyright (c) 2010-2016 Samuel Tardieu <sam@rfc1149.net>
+ *                     and Jan Funke <jan.funke@inf.tu-dresden.de>.
+ * http://www.rfc1149.net/devel/recoverjpeg
+ *
+ * recoverjpeg is released under the GNU General Public License
+ * version 2 that you can find in the COPYING file bundled with the
+ * distribution.
+ */
+
 #include <stdlib.h>
 #include <iostream>
 #include <sstream>

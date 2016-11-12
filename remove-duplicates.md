@@ -1,6 +1,6 @@
 %REMOVE-DUPLICATES(1) User Manuals
 %Samuel Tardieu <sam@rfc1149.net>
-%September 22, 2015
+%November 12, 2016
 
 # NAME
 
@@ -22,7 +22,7 @@ is given. If *-f* is not given, duplicate will be identified twice
 
 # COPYRIGHT
 
-Copyright (c) 2004-2013 Samuel Tardieu <sam@rfc1149.net>.
+Copyright (c) 2004-2016 Samuel Tardieu <sam@rfc1149.net>.
 This is free software; see the source for copying conditions. There is
 NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE.

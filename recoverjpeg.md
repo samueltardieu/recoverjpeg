@@ -123,7 +123,7 @@ Do the same thing in a memory constrained environment where no more than
 
 # COPYRIGHT
 
-Copyright (c) 2004-2013 Samuel Tardieu <sam@rfc1149.net>.
+Copyright (c) 2004-2016 Samuel Tardieu <sam@rfc1149.net>.
 This is free software; see the source for copying conditions. There is
 NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE.

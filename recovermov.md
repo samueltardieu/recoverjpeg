@@ -1,5 +1,5 @@
 % RECOVERMOV(1) Recovermov User Manuals
-% Jan Funke <jan.funke@inf.tu-dresden.de>
+% Jan Funke <jan.funke@inf.tu-dresden.de> and Samuel Tardieu <sam@rfc1149.net>
 % November 12, 2016
 
 # NAME
@@ -73,7 +73,7 @@ Recover as many movies as possible from a crashed ReiserFS file system
 
 # COPYRIGHT
 
-Copyright (c) 2010-2013 Jan Funke <jan.funke@inf.tu-dresden.de>.
+Copyright (c) 2010-2016 Samuel Tardieu <sam@rfc1149.net> and Jan Funke <jan.funke@inf.tu-dresden.de>.
 This is free software; see the source for copying conditions. There is
 NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE.
