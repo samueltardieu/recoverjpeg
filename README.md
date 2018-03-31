@@ -71,9 +71,9 @@ Portability
 -----------
 recoverjpeg has been tested on:
 
-  - Arch Linux x86_64 [2010-03-02]
-  - Cywgin x86 [2010-03-02]
-  - Debian Linux unstable i686 [2010-03-02]
+  - Arch Linux x86_64
+  - Cywgin x86
+  - Debian Linux unstable i686
   - FreeBSD 6.2 x86
   - FreeBSD 7.1 x86
   - FreeBSD 7.2 amd64 (Pierre Beyssac)
@@ -90,12 +90,12 @@ you want to recover pictures from.
 
 Contact information
 -------------------
-Home page: <http://www.rfc1149.net/devel/recoverjpeg>
+Home page: <https://rfc1149.net/devel/recoverjpeg>
 
 Authors:
 
   - [Jan Funke](mailto:jan.funke@inf.tu-dresden.de)
-  - [Samuel Tardieu](http://www.rfc1149.net/)
+  - [Samuel Tardieu](https://rfc1149.net/)
 
 Development
 -----------
