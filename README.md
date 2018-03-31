@@ -69,20 +69,6 @@ was added.
 
 Portability
 -----------
-recoverjpeg has been tested on:
-
-  - Arch Linux x86_64
-  - Cywgin x86
-  - Debian Linux unstable i686
-  - FreeBSD 6.2 x86
-  - FreeBSD 7.1 x86
-  - FreeBSD 7.2 amd64 (Pierre Beyssac)
-  - FreeBSD 9 x86 (Pierre Beyssac)
-  - FreeBSD 9 amd64 (Pierre Beyssac)
-  - Mac OS X 10.6.2 x86_64-apple-darwin [GCC + clang] (Ollivier Robert)
-  - NetBSD 5.0.1 x86 (Stéphane Bortzmeyer)
-  - NetBSD 5.0.2 x86 (Marc Baudoin)
-  - NetBSD 5.0.1 sparc64 (Stéphane Bortzmeyer)
 
 You need to ensure that the off_t type from the C library and the
 lseek() function support offsets of at least the size of the device
