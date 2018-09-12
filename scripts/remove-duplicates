@@ -11,27 +11,27 @@
 
 import os
 
-def check_duplicate (orig, copy):
+def check_duplicate(orig, copy):
     try:
         if open(orig).read() == open(copy).read():
-            print "Removing %s which is a copy of %s" % (copy, orig)
-            os.unlink (copy)
+            print("Removing %s which is a copy of %s" % (copy, orig))
+            os.unlink(copy)
     except:
         pass
 
-def aggregate ():
+def aggregate():
     d = {}
-    for f in os.listdir ('.'):
+    for f in os.listdir('.'):
         s = os.stat(f)[6]
-        if d.has_key (s): d[s].append (f)
+        if s in d: d[s].append(f)
         else: d[s] = [f]
     return d
 
-def remove_duplicates (d):
+def remove_duplicates(d):
     for v in d.values():
         while v:
             del v[0]
-            for c in v[1:]: check_duplicate (v[0], c)
+            for c in v[1:]: check_duplicate(v[0], c)
 
 if __name__ == '__main__':
-    remove_duplicates (aggregate ())
+    remove_duplicates(aggregate())
