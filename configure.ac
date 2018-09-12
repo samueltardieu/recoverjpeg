@@ -1,4 +1,4 @@
-AC_INIT([recoverjpeg], [2.6.2])
+AC_INIT([recoverjpeg], [2.6.3])
 AC_CONFIG_SRCDIR([src/recoverjpeg.c])
 AC_CONFIG_AUX_DIR([support])
 AC_CONFIG_MACRO_DIR([support])
