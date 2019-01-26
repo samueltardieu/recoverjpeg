@@ -1,15 +1,17 @@
 Installation
 ------------
+recoverjpeg requires:
+
+  - Meson: https://mesonbuild.com/
+  - pandoc: https://pandoc.org/ (if you want to build the man pages)
+  - exif: http://sourceforge.net/projects/libexif (for `sort-pictures`)
+  - ImageMagick: http://www.imagemagick.org/ (for `sort-pictures`)
+
 To install recoverjpeg, run
 
-    ./configure
-    make
-    sudo make install
-
-To use sort-pictures, you need to install:
-
-  - exif: http://sourceforge.net/projects/libexif
-  - ImageMagick: http://www.imagemagick.org/
+    meson setup _build --buildtype release
+    cd _build
+    ninja install
 
 Usage
 -----

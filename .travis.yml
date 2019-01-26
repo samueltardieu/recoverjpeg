@@ -1,18 +1,23 @@
+sudo: required
 language: cpp
-sudo: false
 branches:
   only:
     - staging
     - trying
-addons:
-  apt:
-    packages:
-      - pandoc
-compiler:
-  - gcc
-  - clang
+dist: xenial
+before_script:
+  - sudo apt -y update
+  - sudo apt -y install pandoc build-essential clang python3-pip ninja-build
+  - sudo pip3 install setuptools
+  - sudo pip3 install meson
 env:
-  - CFLAGS=-O2 CXXFLAGS=-O2
-  - CFLAGS="-O2 -pedantic -Wall -Wextra -Werror" CXXFLAGS="-O2 -pedantic -Wall -Wextra -Werror"
-  - CFLAGS=-O3 CXXFLAGS=-O3
-script: support/test-build.sh
+  matrix:
+    - RCC=gcc RCXX=g++ CFLAGS=-O2 CXXFLAGS=-O2
+    - RCC=clang RCXX=clang++ CFLAGS=-O2 CXXFLAGS=-O2
+    - RCC=gcc RCXX=g++ CFLAGS="-O2 -pedantic -Wall -Wextra -Werror" CXXFLAGS="-O2 -pedantic -Wall -Wextra -Werror"
+    - RCC=clang RCXX=clang++ CFLAGS="-O2 -pedantic -Wall -Wextra -Werror" CXXFLAGS="-O2 -pedantic -Wall -Wextra -Werror"
+    - RCC=gcc RCXX=g++ CFLAGS=-O3 CXXFLAGS=-O3
+    - RCC=clang RCXX=clang++ CFLAGS=-O3 CXXFLAGS=-O3
+script:
+  - CC=$RCC CXX=$RCXX meson setup _build
+  - cd _build && meson test
