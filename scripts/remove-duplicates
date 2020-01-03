@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#! /usr/bin/python3
 #
 # Usage: remove-duplicates
 #
@@ -14,7 +14,7 @@ import os
 def check_duplicate(orig, copy):
     try:
         if open(orig).read() == open(copy).read():
-            print("Removing %s which is a copy of %s" % (copy, orig))
+            print(("Removing %s which is a copy of %s" % (copy, orig)))
             os.unlink(copy)
     except:
         pass
@@ -28,7 +28,7 @@ def aggregate():
     return d
 
 def remove_duplicates(d):
-    for v in d.values():
+    for v in list(d.values()):
         while v:
             del v[0]
             for c in v[1:]: check_duplicate(v[0], c)
