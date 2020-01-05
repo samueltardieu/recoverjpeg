@@ -1,0 +1,29 @@
+#! /bin/sh
+#
+
+topsrcdir=$(cd $(dirname $0)/.. && pwd)
+REMOVE_DUPLICATES="$topsrcdir/scripts/remove-duplicates"
+trap "rm -rf $PWD/$0.dir" INT QUIT TERM EXIT
+mkdir "$0.dir"
+cd "$0.dir"
+
+echo foo > foo1.txt
+echo foo > foo2.txt
+echo foo > foo3.txt
+echo foo > foo4.txt
+echo bar > bar1.txt
+echo bar > bar2.txt
+echo baz > baz1.txt
+echo zab > baz2.txt
+
+[ $("$REMOVE_DUPLICATES" -f | wc -l) = 4 ] || exit 1
+
+[ $(ls foo?.txt | wc -l) = 1 ] || exit 2
+
+[ -f foo1.txt ] || exit 3
+
+[ $(ls bar?.txt | wc -l) = 1 ] || exit 4
+
+[ -f bar1.txt ] || exit 5
+
+[ $(ls baz?.txt | wc -l) = 2 ] || exit 6

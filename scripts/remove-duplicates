@@ -11,9 +11,9 @@
 
 import os
 
-def check_duplicate(orig, copy):
+def check_duplicate(orig, content, copy):
     try:
-        if open(orig).read() == open(copy).read():
+        if content == open(copy).read():
             print("Removing %s which is a copy of %s" % (copy, orig))
             os.unlink(copy)
     except:
@@ -28,10 +28,17 @@ def aggregate():
     return d
 
 def remove_duplicates(d):
-    for v in d.values():
-        while v:
-            del v[0]
-            for c in v[1:]: check_duplicate(v[0], c)
+    for v in sorted(d.values()):
+        if len(v) < 2:
+            continue
+        v.sort()
+        for (i, f1) in enumerate(v[:-1]):
+            try:
+                content = open(f1).read()
+                for f2 in v[i+1:]:
+                    check_duplicate(f1, content, f2)
+            except IOError:
+                continue
 
 if __name__ == '__main__':
     remove_duplicates(aggregate())

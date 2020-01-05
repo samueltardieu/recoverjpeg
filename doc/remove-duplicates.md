@@ -1,6 +1,6 @@
 %REMOVE-DUPLICATES(1) User Manuals
 %Samuel Tardieu <sam@rfc1149.net>
-%November 12, 2016
+%January 5, 2019
 
 # NAME
 
@@ -13,8 +13,7 @@ remove-duplicate [*-f*]
 # DESCRIPTION
 
 Removes duplicates of the same file in the current directory if *-f*
-is given. If *-f* is not given, duplicate will be identified twice
-(once in every direction).
+is given. If *-f* is not given, duplicates will be identified.
 
 # OPTIONS
 
@@ -22,7 +21,7 @@ is given. If *-f* is not given, duplicate will be identified twice
 
 # COPYRIGHT
 
-Copyright (c) 2004-2016 Samuel Tardieu <sam@rfc1149.net>.
+Copyright (c) 2004-2019 Samuel Tardieu <sam@rfc1149.net>.
 This is free software; see the source for copying conditions. There is
 NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE.
