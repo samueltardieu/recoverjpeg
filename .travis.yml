@@ -1,5 +1,9 @@
 language: cpp
 sudo: false
+branches:
+  only:
+    - staging
+    - trying
 addons:
   apt:
     packages:
