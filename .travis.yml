@@ -11,6 +11,9 @@ addons:
 compiler:
   - gcc
   - clang
+python:
+  - 2.7
+  - 3.6
 env:
   - CFLAGS=-O2 CXXFLAGS=-O2
   - CFLAGS="-O2 -pedantic -Wall -Wextra -Werror" CXXFLAGS="-O2 -pedantic -Wall -Wextra -Werror"
