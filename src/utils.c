@@ -9,24 +9,21 @@
  * distribution.
  */
 
+#include "utils.h"
 #include <config.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include "utils.h"
 
-typedef struct move_s
-{
+typedef struct move_s {
   const char *target;
   struct move_s *next;
 } move_t;
 
 static move_t *chdirs = NULL;
 
-size_t
-atol_suffix(char *arg)
-{
+size_t atol_suffix(char *arg) {
   long multiplier = 1;
 
   switch (arg[strlen(arg) - 1]) {
@@ -54,16 +51,12 @@ atol_suffix(char *arg)
   return atol(arg) * multiplier;
 }
 
-void
-display_version_and_exit(const char *program_name)
-{
+void display_version_and_exit(const char *program_name) {
   printf("%s %s (from the `%s' package)\n", program_name, VERSION, PACKAGE);
   exit(0);
 }
 
-void
-record_chdir(const char *directory)
-{
+void record_chdir(const char *directory) {
   move_t **ptr = &chdirs;
   while (*ptr != NULL) {
     ptr = &(*ptr)->next;
@@ -77,15 +70,14 @@ record_chdir(const char *directory)
   (*ptr)->next = NULL;
 }
 
-void
-perform_chdirs()
-{
+void perform_chdirs() {
   move_t *to_free;
   move_t *p = chdirs;
   while (p != NULL) {
     if (chdir(p->target) != 0) {
       char buffer[512];
-      snprintf(buffer, sizeof buffer, "cannot change directory to `%s'", p->target);
+      snprintf(buffer, sizeof buffer, "cannot change directory to `%s'",
+               p->target);
       perror(buffer);
       exit(1);
     }

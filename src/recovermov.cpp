@@ -10,15 +10,15 @@
  * distribution.
  */
 
-#include <stdlib.h>
+#include <fstream>
 #include <iostream>
 #include <sstream>
-#include <fstream>
+#include <stdlib.h>
 #include <unistd.h>
 
 #include "utils.h"
 
-size_t read_size(std::ifstream& infile) {
+size_t read_size(std::ifstream &infile) {
 
   size_t size = 0;
   unsigned char byte;
@@ -35,7 +35,7 @@ size_t read_size(std::ifstream& infile) {
   return size;
 }
 
-const std::string read_atom_type(std::ifstream& infile) {
+const std::string read_atom_type(std::ifstream &infile) {
 
   std::string type = "";
   char byte;
@@ -48,7 +48,7 @@ const std::string read_atom_type(std::ifstream& infile) {
   return type;
 }
 
-void copy_n(std::ifstream& infile, std::ofstream& outfile, size_t bytes) {
+void copy_n(std::ifstream &infile, std::ofstream &outfile, size_t bytes) {
 
   while (bytes > 0) {
 
@@ -59,7 +59,7 @@ void copy_n(std::ifstream& infile, std::ofstream& outfile, size_t bytes) {
   }
 }
 
-bool is_mov_file(std::ifstream& infile) {
+bool is_mov_file(std::ifstream &infile) {
 
   /* try to read the first atom type "ftyp" */
   infile.seekg(4, std::ios_base::cur);
@@ -76,12 +76,8 @@ bool is_mov_file(std::ifstream& infile) {
 
 bool is_valid_atom_type(const std::string atom_type) {
 
-  if (atom_type == "ftyp" ||
-      atom_type == "moov" ||
-      atom_type == "mdat" ||
-      atom_type == "free" ||
-      atom_type == "skip" ||
-      atom_type == "wide" ||
+  if (atom_type == "ftyp" || atom_type == "moov" || atom_type == "mdat" ||
+      atom_type == "free" || atom_type == "skip" || atom_type == "wide" ||
       atom_type == "pnot")
     return true;
 
@@ -93,24 +89,24 @@ void print_usage(int exitcode) {
   std::cerr << "Usage: recovermov [options] file|device\n";
   std::cerr << "Options:\n";
   std::cerr << "   -b blocksize   Block size in bytes\n";
-	std::cerr << "                  (default: 512)\n";
+  std::cerr << "                  (default: 512)\n";
   std::cerr << "   -n base_name   Basename of the mov files to create\n";
   std::cerr << "                  (default: \"video_\")\n";
   std::cerr << "   -h             This help message\n";
   std::cerr << "   -i index       Initial movie index\n";
   std::cerr << "   -o directory   Restore mov files into this directory\n";
   std::cerr << "   -V             Display version and exit\n";
-  exit (exitcode);
+  exit(exitcode);
 }
 
-int main(int argc, char* const* argv) {
+int main(int argc, char *const *argv) {
 
-  size_t  blocksize = 512;
+  size_t blocksize = 512;
   unsigned int mov_index = 0;
   std::string outfilebase = "video_";
 
   int c;
-  while ((c = getopt (argc, argv, "b:f:hi:m:o:qr:vV")) != -1) {
+  while ((c = getopt(argc, argv, "b:f:hi:m:o:qr:vV")) != -1) {
     switch (c) {
     case 'b':
       blocksize = atol_suffix(optarg);
@@ -127,7 +123,7 @@ int main(int argc, char* const* argv) {
     case 'V':
       display_version_and_exit("recovermov");
     default:
-      print_usage((c == 'h'? 0 : 1));
+      print_usage((c == 'h' ? 0 : 1));
     }
   }
 
@@ -138,13 +134,13 @@ int main(int argc, char* const* argv) {
     print_usage(0);
   }
 
-  const char* infilename  = argv[0];
+  const char *infilename = argv[0];
 
   std::ifstream infile(infilename, std::ios_base::in | std::ios_base::binary);
 
   perform_chdirs();
 
-  size_t      atom_size;
+  size_t atom_size;
   std::string atom_type;
 
   while (!infile.eof()) {
@@ -154,10 +150,11 @@ int main(int argc, char* const* argv) {
       std::cout << "mov file detected\n";
       mov_index++;
 
-      std::ostringstream  outfilename;
+      std::ostringstream outfilename;
       outfilename << outfilebase << mov_index << ".mov";
       std::cout << "writing to " << outfilename.str() << "\n";
-      std::ofstream outfile(outfilename.str().c_str(), std::ios_base::out | std::ios_base::binary);
+      std::ofstream outfile(outfilename.str().c_str(),
+                            std::ios_base::out | std::ios_base::binary);
 
       while (!infile.eof()) {
 
@@ -165,7 +162,8 @@ int main(int argc, char* const* argv) {
         atom_type = read_atom_type(infile);
 
         if (atom_size < 8) {
-          std::cout << "encountered special atom (size=" << atom_size << "), aborting\n";
+          std::cout << "encountered special atom (size=" << atom_size
+                    << "), aborting\n";
           break;
         }
 
@@ -183,13 +181,12 @@ int main(int argc, char* const* argv) {
       std::cout << "recovery of " << outfilename.str() << " finished\n";
 
       /* go back to last block start */
-      size_t cur_pos    = infile.tellg();
-      size_t cur_block  = cur_pos/blocksize;
+      size_t cur_pos = infile.tellg();
+      size_t cur_block = cur_pos / blocksize;
 
-      infile.seekg(cur_block*blocksize);
+      infile.seekg(cur_block * blocksize);
     }
 
     infile.seekg(blocksize, std::ios_base::cur);
   }
 }
-
