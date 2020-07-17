@@ -1,0 +1,20 @@
+#! /bin/sh
+#
+# Usage: run-fuzzer recoverjpeg|recovermov [options]
+
+case $1 in
+  recoverjpeg) PROG=recoverjpeg;;
+  recovermov) PROG=recovermov;;
+  *)
+    echo "Usage: run-fuzzer recoverjpeg|recovermov [options]" >&2
+    exit 1
+    ;;
+esac
+shift
+
+make distclean > /dev/null 2>&1 || true
+CC=clang CXX=clang++ ./configure
+flags="-Wall -Werror -Wextra -fsanitize=fuzzer,address -DLIBFUZZER_ENABLE=YES"
+make -C src CFLAGS="$flags" CXXFLAGS="$flags" $PROG
+mkdir -p fuzzer/auto-corpus-$PROG
+src/$PROG fuzzer/auto-corpus-$PROG fuzzer/corpus-$PROG -dict=fuzzer/$PROG.dict

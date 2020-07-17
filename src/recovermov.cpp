@@ -10,10 +10,12 @@
  * distribution.
  */
 
+#include <fcntl.h>
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <stdlib.h>
+#include <sys/types.h>
 #include <unistd.h>
 
 #include "utils.h"
@@ -63,7 +65,13 @@ bool is_mov_file(std::ifstream &infile) {
 
   /* try to read the first atom type "ftyp" */
   infile.seekg(4, std::ios_base::cur);
+  if (infile.fail() || infile.eof())
+    return false;
   std::string atom_type = read_atom_type(infile);
+  if (infile.fail() || infile.eof()) {
+    infile.seekg(-4, std::ios_base::cur);
+    return false;
+  }
 
   /* reset read position */
   infile.seekg(-8, std::ios_base::cur);
@@ -95,18 +103,26 @@ void print_usage(int exitcode) {
   std::cerr << "   -h             This help message\n";
   std::cerr << "   -i index       Initial movie index\n";
   std::cerr << "   -o directory   Restore mov files into this directory\n";
+  std::cerr << "   -q             Be quiet\n";
   std::cerr << "   -V             Display version and exit\n";
   exit(exitcode);
 }
 
-int main(int argc, char *const *argv) {
+#ifdef LIBFUZZER_ENABLE
+#define main fuzzer_main
+#endif // LIBFUZZER_ENABLE
+
+int main(int argc, const char *const argv[]) {
 
   size_t blocksize = 512;
   unsigned int mov_index = 0;
   std::string outfilebase = "video_";
+  int quiet = 0;
+  int dummy = 0;
 
+#ifndef LIBFUZZER_ENABLE
   int c;
-  while ((c = getopt(argc, argv, "b:f:hi:m:o:qr:vV")) != -1) {
+  while ((c = getopt(argc, argv, "b:hi:o:qV")) != -1) {
     switch (c) {
     case 'b':
       blocksize = atol_suffix(optarg);
@@ -120,6 +136,9 @@ int main(int argc, char *const *argv) {
     case 'o':
       record_chdir(optarg);
       break;
+    case 'q':
+      quiet = 1;
+      break;
     case 'V':
       display_version_and_exit("recovermov");
     default:
@@ -129,6 +148,10 @@ int main(int argc, char *const *argv) {
 
   argc -= optind;
   argv += optind;
+#else  // !LIBFUZZER_ENABLE
+  quiet = 1;
+  dummy = 1;
+#endif // !LIBFUZZER_ENABLE
 
   if (argc != 1) {
     print_usage(0);
@@ -143,16 +166,20 @@ int main(int argc, char *const *argv) {
   size_t atom_size;
   std::string atom_type;
 
-  while (!infile.eof()) {
+  while (!(infile.fail() || infile.eof())) {
 
     if (is_mov_file(infile)) {
 
-      std::cout << "mov file detected\n";
+      if (!quiet) {
+        std::cout << "mov file detected\n";
+      }
       mov_index++;
 
       std::ostringstream outfilename;
       outfilename << outfilebase << mov_index << ".mov";
-      std::cout << "writing to " << outfilename.str() << "\n";
+      if (!quiet) {
+        std::cout << "writing to " << outfilename.str() << "\n";
+      }
       std::ofstream outfile(outfilename.str().c_str(),
                             std::ios_base::out | std::ios_base::binary);
 
@@ -162,8 +189,10 @@ int main(int argc, char *const *argv) {
         atom_type = read_atom_type(infile);
 
         if (atom_size < 8) {
-          std::cout << "encountered special atom (size=" << atom_size
-                    << "), aborting\n";
+          if (!quiet) {
+            std::cout << "encountered special atom (size=" << atom_size
+                      << "), aborting\n";
+          }
           break;
         }
 
@@ -178,7 +207,9 @@ int main(int argc, char *const *argv) {
         copy_n(infile, outfile, atom_size);
       }
 
-      std::cout << "recovery of " << outfilename.str() << " finished\n";
+      if (!quiet) {
+        std::cout << "recovery of " << outfilename.str() << " finished\n";
+      }
 
       /* go back to last block start */
       size_t cur_pos = infile.tellg();
@@ -189,4 +220,25 @@ int main(int argc, char *const *argv) {
 
     infile.seekg(blocksize, std::ios_base::cur);
   }
+
+  return 0;
 }
+
+#ifdef LIBFUZZER_ENABLE
+
+extern "C" {
+int LLVMFuzzerTestOneInput(const unsigned char *data, size_t length) {
+#define TEMPLATE "/tmp/recovermov-fuzzXXXXXX"
+  char filename[sizeof TEMPLATE] = TEMPLATE;
+  mktemp(filename);
+  int fd = open(filename, O_CREAT, 0644);
+  write(fd, data, length);
+  close(fd);
+  const char *argv[] = {filename};
+  main(1, argv);
+  unlink(filename);
+  return 0;
+}
+}
+
+#endif // LIBFUZZER_ENABLE

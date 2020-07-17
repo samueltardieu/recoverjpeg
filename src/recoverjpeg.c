@@ -161,27 +161,32 @@ static size_t jpeg_size(const unsigned char *start) {
   }
 }
 
-static const char *file_name(const char *dir_format, const char *file_format,
-                             unsigned int index) {
-  static char dir_buffer[200];
+static char *file_name(const char *dir_format, const char *file_format,
+                       unsigned int index) {
+#define DIR_BUFFER_SIZE 200
+  char *dir_buffer = malloc(DIR_BUFFER_SIZE);
   char file_buffer[100];
 
   if (dir_format) {
-    snprintf(dir_buffer, sizeof dir_buffer, dir_format, index / 100);
+    snprintf(dir_buffer, DIR_BUFFER_SIZE, dir_format, index / 100);
     if (mkdir(dir_buffer, 0777) == -1 && errno != EEXIST) {
       fprintf(stderr, "recoverjpeg: unable to create directory %s (%s)\n",
               dir_buffer, strerror(errno));
       exit(1);
     }
-    strncat(dir_buffer, "/", sizeof dir_buffer - 1);
+    strncat(dir_buffer, "/", DIR_BUFFER_SIZE - 1);
   } else {
     *dir_buffer = '\0';
   }
 
   snprintf(file_buffer, sizeof file_buffer, file_format, index);
-  strncat(dir_buffer, file_buffer, sizeof dir_buffer - strlen(dir_buffer) - 1);
+  strncat(dir_buffer, file_buffer, DIR_BUFFER_SIZE - strlen(dir_buffer) - 1);
   return dir_buffer;
 }
+
+#ifdef LIBFUZZER_ENABLE
+#define main fuzzer_main
+#endif // LIBFUZZER_ENABLE
 
 int main(int argc, const char *const argv[]) {
   int fd, fdout;
@@ -193,7 +198,7 @@ int main(int argc, const char *const argv[]) {
   off_t offset, skip_size;
   const char *file_format;
   const char *dir_format;
-  int c;
+  int dummy = 0;
 
   read_size = 128 * 1024 * 1024;
   block_size = 512;
@@ -202,6 +207,8 @@ int main(int argc, const char *const argv[]) {
   file_format = "image%05d.jpg";
   dir_format = NULL;
 
+#ifndef LIBFUZZER_ENABLE
+  int c;
   while ((c = getopt(argc, (char *const *)argv, "b:d:f:hi:m:o:qr:s:S:vV")) !=
          -1) {
     switch (c) {
@@ -247,6 +254,11 @@ int main(int argc, const char *const argv[]) {
 
   argc -= optind;
   argv += optind;
+#else
+  block_size = 1;
+  dummy = 1;
+  quiet = 1;
+#endif // !LIBFUZZER_ENABLE
 
   if (argc != 1) {
     usage(0);
@@ -313,22 +325,25 @@ int main(int argc, const char *const argv[]) {
     if (size > ignore_size) {
       size_t n;
 
-      const char *buffer = file_name(dir_format, file_format, begin_index + i);
-      i++;
-      if (verbose) {
-        printf("%s %ld bytes\n", buffer, (long)size);
+      if (!dummy) {
+        char *buffer = file_name(dir_format, file_format, begin_index + i);
+        i++;
+        if (verbose) {
+          printf("%s %ld bytes\n", buffer, (long)size);
+        }
+        fdout = open(buffer, O_WRONLY | O_CREAT, 0666);
+        if (fdout < 0) {
+          fprintf(stderr, "Unable to open %s for writing\n", buffer);
+          exit(1);
+        }
+        if ((size_t)write(fdout, addr, size) != size) {
+          fprintf(stderr, "Unable to write %ld bytes to %s\n", (long)size,
+                  buffer);
+          exit(1);
+        }
+        close(fdout);
+        free(buffer);
       }
-      fdout = open(buffer, O_WRONLY | O_CREAT, 0666);
-      if (fdout < 0) {
-        fprintf(stderr, "Unable to open %s for writing\n", buffer);
-        exit(1);
-      }
-      if ((size_t)write(fdout, addr, size) != size) {
-        fprintf(stderr, "Unable to write %ld bytes to %s\n", (long)size,
-                buffer);
-        exit(1);
-      }
-      close(fdout);
 
       n = ((size + block_size - 1) / block_size) * block_size;
       addr += n;
@@ -338,6 +353,8 @@ int main(int argc, const char *const argv[]) {
       offset += block_size;
     }
   }
+
+  close(fd);
 
   if (progressbar()) {
     cleanup_progressbar();
@@ -350,5 +367,22 @@ int main(int argc, const char *const argv[]) {
   /* Free allocated memory to keep valgrind happy */
   free(start);
 
-  exit(0);
+  return 0;
 }
+
+#ifdef LIBFUZZER_ENABLE
+
+int LLVMFuzzerTestOneInput(const unsigned char *data, size_t length) {
+#define TEMPLATE "/tmp/recovermov-fuzzXXXXXX"
+  char filename[sizeof TEMPLATE] = TEMPLATE;
+  mktemp(filename);
+  int fd = open(filename, O_CREAT, 0644);
+  write(fd, data, length);
+  close(fd);
+  const char *argv[] = {filename};
+  main(1, argv);
+  unlink(filename);
+  return 0;
+}
+
+#endif // LIBFUZZER_ENABLE
